@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borne BON TOUTOU RESTAURANT - Kiosque Interactif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-title: 'Bebas Neue', sans-serif;
+            --font-graffiti: 'Permanent Marker', cursive;
+            --font-body: 'Montserrat', sans-serif;
+            --color-toutou-yellow: #FFD700;
+            --color-toutou-dark: #0A0A0A;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: #050505;
+            color: #FFFFFF;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .font-bebas { font-family: var(--font-title); }
+        .font-graffiti { font-family: var(--font-graffiti); }
+
+        /* Style Urbain et Bords Néon Jaune */
+        .toutou-card {
+            background: linear-gradient(145deg, #181818, #0d0d0d);
+            border: 2px solid #282828;
+            transition: all 0.2s ease-in-out;
+        }
+        .toutou-card:hover {
+            border-color: var(--color-toutou-yellow);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .toutou-btn-yellow {
+            background: linear-gradient(180deg, #FFD700 0%, #CCAC00 100%);
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            font-family: var(--font-title);
+            letter-spacing: 1px;
+            color: #000000;
+        }
+        .toutou-btn-yellow:active {
+            transform: scale(0.97);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animation screensaver */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .screensaver-bg {
+            animation: pulseGlow 6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-black p-2" onclick="resetInactivityTimer()" onmousemove="resetInactivityTimer()" ontouchstart="resetInactivityTimer()">
+
+    <!-- CONTENEUR BORNE DE COMMANDE -->
+    <div class="relative w-[430px] h-[880px] bg-[#0A0A0A] rounded-3xl border-4 border-neutral-800 shadow-2xl flex flex-col overflow-hidden">
+
+        <!-- ==================== SCREENSAVER / ÉCONOMISEUR D'ÉCRAN (30s) ==================== -->
+        <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-50 bg-black cursor-pointer overflow-hidden">
+            <div class="absolute inset-0">
+                <div class="screensaver-bg absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562174120311914648/130249ab-f48e-45c4-b605-d0242ca96a90.png?ex=6ad90786&is=6ad7b606&hm=a4861de1afba2096e8da88ccda78afbf8abb293e9943fa787121ff2e820f0345&'), url('130249ab-f48e-45c4-b605-d0242ca96a90.png');">
+                    <!-- Filte dégradé pour la lisibilité -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+
+                    <div class="relative z-10 flex justify-between items-center">
+                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">NOUVEAUTÉ EXCLUSIVE</span>
+                        <span class="text-xs font-mono text-yellow-300">MINECRAFT EDITION</span>
+                    </div>
+
+                    <div class="relative z-10 text-center mb-16">
+                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">LE MENU MAX</h2>
+                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET FIGURINE BON TOUTOU !</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to action permanent -->
+            <div class="absolute bottom-6 left-6 right-6 z-20">
+                <div class="toutou-btn-yellow py-4 text-center text-2xl font-bebas rounded-2xl animate-pulse tracking-wider shadow-2xl">
+                    TOUCHER L'ÉCRAN POUR COMMANDER
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ÉCRAN D'ACCUEIL (SPLASH) ==================== -->
+        <div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#0A0A0A] flex flex-col justify-between p-6 cursor-pointer">
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.0</span>
+                <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">MINECRAFT EDITION</span>
+            </div>
+
+            <div class="flex flex-col items-center my-auto text-center">
+                <div class="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center border-2 border-yellow-300 shadow-lg shadow-yellow-400/50 mb-4 transform -rotate-3">
+                    <span class="text-5xl font-graffiti text-black">BT</span>
+                </div>
+                <h1 class="text-5xl font-bebas text-white leading-none tracking-wide">BON TOUTOU</h1>
+                <p class="text-yellow-400 font-graffiti text-sm mt-1">BURGER & DOG HOUSE</p>
+                <p class="text-neutral-400 text-xs italic mt-4">"LA MEUTE A DU GOÛT."</p>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="startOrder('Sur Place')" class="w-full toutou-btn-yellow py-4 rounded-xl text-2xl text-black font-bebas flex items-center justify-center gap-2">
+                    <span>🍽️</span> SUR PLACE
+                </button>
+                <button onclick="startOrder('À Emporter')" class="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 py-3 rounded-xl text-xl text-white font-bebas flex items-center justify-center gap-2">
+                    <span>🛍️</span> À EMPORTER
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== EN-TÊTE ==================== -->
+        <header class="bg-neutral-900 border-b border-neutral-800 p-3 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-9 h-9 bg-yellow-400 rounded-xl flex items-center justify-center font-graffiti text-black text-lg border border-yellow-300">
+                    BT
+                </div>
+                <div>
+                    <h1 class="text-xl font-bebas leading-none text-white tracking-wide">BON TOUTOU RESTAURANT</h1>
+                    <span id="order-type-badge" class="text-[10px] text-yellow-400 font-bold uppercase tracking-wider">Sur Place</span>
+                </div>
+            </div>
+            <button onclick="toggleOrderType()" class="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg text-xs font-bold text-neutral-300">
+                <span id="order-type-icon">🍽️</span> Changement
+            </button>
+        </header>
+
+        <!-- ==================== BARRE DES CATÉGORIES ==================== -->
+        <nav class="flex border-b border-neutral-800 bg-black shrink-0 overflow-x-auto no-scrollbar p-1.5 gap-1.5">
+            <button onclick="filterCategory('all')" id="cat-all" class="cat-btn px-3 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold shrink-0">Tous</button>
+            <button onclick="filterCategory('stars')" id="cat-stars" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">⭐ Menus Meute</button>
+            <button onclick="filterCategory('burgers')" id="cat-burgers" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍔 Burgers</button>
+            <button onclick="filterCategory('hotdogs')" id="cat-hotdogs" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🌭 Hot-Dogs</button>
+            <button onclick="filterCategory('sides')" id="cat-sides" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍟 Sides</button>
+            <button onclick="filterCategory('drinks')" id="cat-drinks" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🥤 Boissons</button>
+            <button onclick="filterCategory('desserts')" id="cat-desserts" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍰 Desserts</button>
+        </nav>
+
+        <!-- ==================== GRILLE DE PRODUITS ==================== -->
+        <main class="flex-1 p-2.5 overflow-y-auto no-scrollbar bg-[#0D0D0D]">
+            <div id="products-grid" class="grid grid-cols-2 gap-2.5">
+                <!-- Injection via JS -->
+            </div>
+        </main>
+
+        <!-- ==================== PIED DE PAGE / PANIER ==================== -->
+        <footer class="bg-neutral-900 border-t border-neutral-800 p-3 shrink-0">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <span class="text-2xl">🛍️</span>
+                        <span id="cart-badge" class="absolute -top-1 -right-2 bg-yellow-400 text-black text-[10px] font-bold px-1.5 py-0.2 rounded-full border border-black">0</span>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-neutral-400">TOTAL COMMANDE</div>
+                        <div id="cart-total-display" class="text-xl font-bebas text-white leading-none">0,00 €</div>
+                    </div>
+                </div>
+                <button onclick="openCartModal()" class="text-xs text-yellow-400 hover:text-yellow-300 font-bold underline">Détails de la commande</button>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="resetOrder()" class="w-1/3 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-bold rounded-xl border border-neutral-700">Vider</button>
+                <button id="btn-checkout" onclick="openCartModal()" disabled class="w-2/3 toutou-btn-yellow py-2.5 text-lg font-bebas text-black rounded-xl disabled:opacity-40 disabled:cursor-not-allowed">Valider la commande</button>
+            </div>
+        </footer>
+
+        <!-- ==================== MODAL CONFIGURATEUR MENU STAR ==================== -->
+        <div id="star-modal" class="hidden absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-end p-3">
+            <div class="toutou-card rounded-2xl p-4 flex flex-col max-h-[90%] border-yellow-400">
+                <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                    <div>
+                        <h3 id="modal-star-title" class="text-2xl font-bebas text-white leading-none">MENU STAR</h3>
+                        <p id="modal-star-sub" class="text-xs text-yellow-400 font-graffiti">Jouet Collector Inclus</p>
+                    </div>
+                    <button onclick="closeStarModal()" class="text-neutral-400 font-bold px-2 py-1 text-lg">✕</button>
+                </div>
+
+                <div class="overflow-y-auto space-y-3 my-3 no-scrollbar pr-1">
+                    <div>
+                        <label class="text-xs font-bold text-neutral-400 uppercase">1. Choix du Plat</label>
+                        <select id="star-plat-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
+                            <!-- JS Inject -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-neutral-400 uppercase">2. Choix de l'accompagnement</label>
+                        <select id="star-side-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
+                            <option value="Frites Croquantes">Frites Croquantes</option>
+                            <option value="Frites Cheese Cheddar (+1.50€)">Frites Cheese Cheddar (+1.50€)</option>
+                            <option value="Nuggets Poulet (x6) (+2.00€)">Nuggets Poulet (x6) (+2.00€)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-neutral-400 uppercase">3. Choix de la Boisson</label>
+                        <select id="star-drink-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
+                            <option value="Coca-Cola 33cl">Coca-Cola 33cl</option>
+                            <option value="Ice Tea Pêche 33cl">Ice Tea Pêche 33cl</option>
+                            <option value="Oasis Tropical 33cl">Oasis Tropical 33cl</option>
+                            <option value="Eau Minérale 50cl">Eau Minérale 50cl</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="btn-add-star" onclick="confirmStarMenu()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
+                    Ajouter au panier • <span id="star-price-display">0.00 €</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== MODAL PANIER ==================== -->
+        <div id="cart-modal" class="hidden absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-end p-3">
+            <div class="toutou-card rounded-2xl p-4 flex flex-col max-h-[85%] border-neutral-700">
+                <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                    <h3 class="text-2xl font-bebas text-white">VOTRE PANIER</h3>
+                    <button onclick="closeCartModal()" class="text-neutral-400 font-bold px-2 text-lg">✕</button>
+                </div>
+
+                <div id="cart-items-list" class="flex-1 overflow-y-auto space-y-2 my-3 no-scrollbar"></div>
+
+                <div class="border-t border-neutral-800 pt-2 flex justify-between items-center mb-3">
+                    <span class="text-xs text-neutral-400 font-bold">TOTAL À PAYER:</span>
+                    <span id="modal-total-price" class="text-2xl font-bebas text-yellow-400">0,00 €</span>
+                </div>
+
+                <button onclick="submitOrder()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
+                    Confirmer et Payer
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== ÉCRAN DE CONFIRMATION / TICKET ==================== -->
+        <div id="confirmation-screen" class="hidden absolute inset-0 z-50 bg-[#0A0A0A] p-6 flex flex-col justify-between text-center">
+            <div class="text-xs text-neutral-500 font-mono">
+                BON TOUTOU RESTAURANT • KIOSQUE #01
+            </div>
+
+            <div class="my-auto">
+                <div class="w-16 h-16 bg-yellow-950 border border-yellow-400 text-yellow-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-3">
+                    ✓
+                </div>
+                <h2 class="text-3xl font-bebas text-white">COMMANDE VALIDÉE !</h2>
+                <p class="text-xs text-neutral-400">Conservez votre numéro de commande :</p>
+
+                <div class="toutou-card bg-neutral-900 p-4 my-4 border-2 border-yellow-400 rounded-2xl inline-block w-full">
+                    <p class="text-xs text-neutral-400 font-mono">TICKET N°</p>
+                    <p id="order-number" class="text-6xl font-bebas text-yellow-400 my-1">#42</p>
+                </div>
+
+                <div id="receipt-summary" class="text-xs text-left bg-neutral-900 border border-neutral-800 p-3 rounded-xl max-h-36 overflow-y-auto font-mono text-neutral-300"></div>
+            </div>
+
+            <button onclick="finishAndReset()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
+                Terminer
+            </button>
+        </div>
+
+    </div>
+
+    <!-- JavaScript applicatif -->
+    <script>
+        const PRODUCTS = [
+            // Menus Stars / Meute
+            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://wamonixx.fr/borne_de_commande_le_raz.html/image_2581da.jpg', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
+            { id: 'menu-toutou-supreme', name: 'Menu Toutou Supreme', category: 'stars', price: 15.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Double Smash + Frites + Boisson + Jouet Nossy Balle !', isStar: true, options: ['Toutou Double Smash', 'Toutou Crispy Chicken'] },
+            { id: 'menu-alpha-dog', name: 'Menu Alpha Dog', category: 'stars', price: 14.90, img: 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80', desc: 'Giant Hot-Dog + Frites Cheddar + Boisson 33cl', isStar: true, options: ['Hot-Dog Classic Cheese', 'Hot-Dog Crispy Bacon'] },
+
+            // Burgers
+            { id: 'toutou-burger', name: 'Le Bon Toutou', category: 'burgers', price: 11.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Steak haché pur bœuf, cheddar fondu, sauce maison' },
+            { id: 'big-bark', name: 'Big Bark', category: 'burgers', price: 12.90, img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80', desc: 'Double steak, oignons crispy, sauce BBQ fumée' },
+            { id: 'crispy-puppy', name: 'Crispy Puppy', category: 'burgers', price: 10.90, img: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=500&q=80', desc: 'Poulet croustillant, salade, mayo moutarde douce' },
+
+            // Hot-Dogs
+            { id: 'hd-classic', name: 'Hot-Dog Classic', category: 'hotdogs', price: 7.90, img: 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80', desc: 'Saucisse de volaille, moutarde douce, oignons frits' },
+            { id: 'hd-cheddar', name: 'Hot-Dog Cheddar Melt', category: 'hotdogs', price: 8.90, img: 'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=500&q=80', desc: 'Nappé de véritable cheddar chaud et bacon croustillant' },
+
+            // Sides
+            { id: 'frites-croquantes', name: 'Frites Croquantes', category: 'sides', price: 3.00, img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80', desc: 'Frites maison coupées épaisses' },
+            { id: 'frites-cheddar', name: 'Frites Cheese Cheddar', category: 'sides', price: 4.50, img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=500&q=80', desc: 'Sauce fromage cheddar chaud' },
+            { id: 'nuggets-6', name: '6 Nuggets Poulet', category: 'sides', price: 5.90, img: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=500&q=80', desc: 'Bouchées de poulet croustillantes' },
+
+            // Boissons & Desserts
+            { id: 'coca-cola', name: 'Coca-Cola 33cl', category: 'drinks', price: 2.50, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80', desc: 'Rafraîchissant' },
+            { id: 'ice-tea', name: 'Ice Tea 33cl', category: 'drinks', price: 2.50, img: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=500&q=80', desc: 'Saveur Pêche' },
+            { id: 'donut-yellow', name: 'Donut Yellow Glaze', category: 'desserts', price: 3.20, img: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=500&q=80', desc: 'Nappage citron & vanille' },
+            { id: 'cookie-choco', name: 'Cookie Toutou Choco', category: 'desserts', price: 3.00, img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=500&q=80', desc: 'Grand cookie aux pépites' }
+        ];
+
+        let cart = [];
+        let currentCategory = 'all';
+        let orderType = 'Sur Place';
+        let currentStarProduct = null;
+        let inactivityTimer = null;
+
+        function startOrder(type = 'Sur Place') {
+            orderType = type;
+            document.getElementById('order-type-badge').textContent = orderType;
+            document.getElementById('order-type-icon').textContent = orderType === 'Sur Place' ? '🍽️' : '🛍️';
+            document.getElementById('splash-screen').classList.add('hidden');
+            resetInactivityTimer();
+        }
+
+        function toggleOrderType() {
+            orderType = orderType === 'Sur Place' ? 'À Emporter' : 'Sur Place';
+            document.getElementById('order-type-badge').textContent = orderType;
+            document.getElementById('order-type-icon').textContent = orderType === 'Sur Place' ? '🍽️' : '🛍️';
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-yellow-400', 'text-black');
+                btn.classList.add('bg-neutral-800', 'text-neutral-300');
+            });
+            const active = document.getElementById(`cat-${cat}`);
+            if (active) {
+                active.classList.remove('bg-neutral-800', 'text-neutral-300');
+                active.classList.add('bg-yellow-400', 'text-black');
+            }
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const items = currentCategory === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === currentCategory);
+
+            grid.innerHTML = items.map(p => `
+                <div class="toutou-card rounded-xl p-2.5 flex flex-col justify-between overflow-hidden relative">
+                    ${p.category === 'stars' ? '<span class="absolute top-2 right-2 bg-yellow-400 text-black text-[9px] font-bold px-1.5 py-0.5 rounded shadow">STAR</span>' : ''}
+                    <img src="${p.img}" alt="${p.name}" class="w-full h-24 object-cover rounded-lg mb-2" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80'">
+                    <div>
+                        <h4 class="font-bebas text-lg text-white leading-tight">${p.name}</h4>
+                        <p class="text-[10px] text-neutral-400 line-clamp-2 leading-snug">${p.desc}</p>
+                    </div>
+                    <div class="mt-2.5 flex items-center justify-between border-t border-neutral-800 pt-2">
+                        <span class="font-bebas text-lg text-yellow-400">${p.price.toFixed(2)} €</span>
+                        <button onclick="handleProductClick('${p.id}')" class="toutou-btn-yellow px-2.5 py-1 text-sm rounded-lg">
+                            +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleProductClick(id) {
+            const product = PRODUCTS.find(p => p.id === id);
+            if (!product) return;
+
+            if (product.isStar) {
+                currentStarProduct = product;
+                document.getElementById('modal-star-title').textContent = product.name;
+                document.getElementById('star-price-display').textContent = product.price.toFixed(2) + ' €';
+
+                const selectPlat = document.getElementById('star-plat-select');
+                selectPlat.innerHTML = product.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+
+                document.getElementById('star-modal').classList.remove('hidden');
+            } else {
+                addToCart(product);
+            }
+        }
+
+        function closeStarModal() {
+            document.getElementById('star-modal').classList.add('hidden');
+        }
+
+        function confirmStarMenu() {
+            if (!currentStarProduct) return;
+            const plat = document.getElementById('star-plat-select').value;
+            const side = document.getElementById('star-side-select').value;
+            const drink = document.getElementById('star-drink-select').value;
+
+            const customName = `${currentStarProduct.name} (${plat}, ${side}, ${drink})`;
+            addToCart({ ...currentStarProduct, name: customName });
+            closeStarModal();
+        }
+
+        function addToCart(product) {
+            const existing = cart.find(item => item.name === product.name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+            document.getElementById('cart-badge').textContent = totalQty;
+            document.getElementById('cart-total-display').textContent = totalPrice.toFixed(2) + ' €';
+            document.getElementById('modal-total-price').textContent = totalPrice.toFixed(2) + ' €';
+            document.getElementById('btn-checkout').disabled = totalQty === 0;
+        }
+
+        function openCartModal() {
+            renderCartModalItems();
+            document.getElementById('cart-modal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+
+        function renderCartModalItems() {
+            const container = document.getElementById('cart-items-list');
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-xs text-neutral-500 py-4">Votre panier est vide</p>';
+                return;
+            }
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="flex items-center justify-between bg-neutral-900 p-2 rounded-lg border border-neutral-800">
+                    <div class="pr-2">
+                        <div class="font-bebas text-base text-white leading-tight">${item.name}</div>
+                        <div class="text-xs text-yellow-400 font-bold">${(item.price * item.qty).toFixed(2)} €</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="changeQty(${idx}, -1)" class="w-6 h-6 bg-neutral-800 text-white rounded text-xs font-bold">-</button>
+                        <span class="text-xs font-bold text-white px-1">${item.qty}</span>
+                        <button onclick="changeQty(${idx}, 1)" class="w-6 h-6 bg-yellow-400 text-black rounded text-xs font-bold">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) cart.splice(index, 1);
+            updateCartUI();
+            renderCartModalItems();
+        }
+
+        function submitOrder() {
+            closeCartModal();
+            const orderNum = '#' + Math.floor(10 + Math.random() * 90);
+            document.getElementById('order-number').textContent = orderNum;
+
+            const summary = document.getElementById('receipt-summary');
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+
+            summary.innerHTML = cart.map(item => `
+                <div class="flex justify-between py-0.5">
+                    <span>${item.qty}x ${item.name}</span>
+                    <span>${(item.price * item.qty).toFixed(2)} €</span>
+                </div>
+            `).join('') + `
+                <div class="border-t border-neutral-700 mt-2 pt-1 flex justify-between font-bold text-yellow-400">
+                    <span>TOTAL</span>
+                    <span>${totalPrice.toFixed(2)} €</span>
+                </div>
+            `;
+
+            document.getElementById('confirmation-screen').classList.remove('hidden');
+        }
+
+        function resetOrder() {
+            cart = [];
+            updateCartUI();
+        }
+
+        function finishAndReset() {
+            resetOrder();
+            document.getElementById('confirmation-screen').classList.add('hidden');
+            document.getElementById('splash-screen').classList.remove('hidden');
+        }
+
+        /* Gestion du Screen Saver / Inactivité (30 secondes) */
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                document.getElementById('attract-screen').classList.remove('hidden');
+            }, 30000);
+        }
+
+        function dismissAttractMode() {
+            document.getElementById('attract-screen').classList.add('hidden');
+            resetInactivityTimer();
+        }
+
+        window.onload = function() {
+            renderProducts();
+            updateCartUI();
+            resetInactivityTimer();
+        };
+    </script>
+</body>
+</html>
