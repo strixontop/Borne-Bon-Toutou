@@ -145,31 +145,34 @@
             </div>
         </div>
 
-        <!-- ==================== ÉCRAN D'ACCUEIL (SPLASH) ==================== -->
-        <div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#0A0A0A] flex flex-col justify-between p-6 cursor-pointer">
-            <div class="flex justify-between items-center">
-                <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.5</span>
-                <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">STREET FOOD EDITION</span>
-            </div>
+       <!-- ==================== ÉCRAN D'ACCUEIL (SPLASH) ==================== -->
+<div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#0A0A0A] flex flex-col p-6 cursor-pointer">
+    <div class="flex justify-between items-center">
+        <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.5</span>
+        <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">STREET FOOD EDITION</span>
+    </div>
 
-            <div class="flex flex-col items-center my-auto text-center">
-                <div class="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center border-2 border-yellow-300 shadow-lg shadow-yellow-400/50 mb-4 transform -rotate-3">
-                    <span class="text-5xl font-graffiti text-black">BT</span>
-                </div>
-                <h1 class="text-5xl font-bebas text-white leading-none tracking-wide">BON TOUTOU</h1>
-                <p class="text-yellow-400 font-graffiti text-sm mt-1">LE FAST FOOD QUI FAIT WOUAF !</p>
-                <p class="text-neutral-400 text-xs italic mt-4">"LA MEUTE A DU GOÛT."</p>
-            </div>
-
-            <div class="space-y-3">
-                <button onclick="event.stopPropagation(); startOrder('Sur Place')" class="w-full toutou-btn-yellow py-4 rounded-xl text-2xl text-black font-bebas flex items-center justify-center gap-2">
-                    <span>🍽️</span> SUR PLACE
-                </button>
-                <button onclick="event.stopPropagation(); startOrder('À Emporter')" class="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 py-3 rounded-xl text-xl text-white font-bebas flex items-center justify-center gap-2">
-                    <span>🛍️</span> À EMPORTER
-                </button>
-            </div>
+    <div class="flex flex-col items-center text-center mt-16">
+        <div class="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center border-2 border-yellow-300 shadow-lg shadow-yellow-400/50 mb-4 transform -rotate-3">
+            <span class="text-5xl font-graffiti text-black">BT</span>
         </div>
+        <h1 class="text-5xl font-bebas text-white leading-none tracking-wide">BON TOUTOU</h1>
+        <p class="text-yellow-400 font-graffiti text-sm mt-1">LE FAST FOOD QUI FAIT WOUAF !</p>
+        <p class="text-neutral-400 text-xs italic mt-4">"LA MEUTE A DU GOÛT."</p>
+    </div>
+
+    <!-- Boutons carrés côte à côte, placés plus haut -->
+    <div class="grid grid-cols-2 gap-4 mt-10">
+        <button onclick="event.stopPropagation(); startOrder('Sur Place')" class="toutou-btn-yellow aspect-square rounded-2xl text-black font-bebas flex flex-col items-center justify-center gap-2">
+            <span class="text-6xl">🍽️</span>
+            <span class="text-3xl leading-none">SUR PLACE</span>
+        </button>
+        <button onclick="event.stopPropagation(); startOrder('À Emporter')" class="aspect-square bg-neutral-800 hover:bg-neutral-700 border-2 border-neutral-700 hover:border-yellow-400 rounded-2xl text-white font-bebas flex flex-col items-center justify-center gap-2">
+            <span class="text-6xl">🛍️</span>
+            <span class="text-3xl leading-none">À EMPORTER</span>
+        </button>
+    </div>
+</div>
 
         <!-- ==================== EN-TÊTE ==================== -->
         <header class="bg-neutral-900 border-b border-neutral-800 p-3 flex items-center justify-between shrink-0">
