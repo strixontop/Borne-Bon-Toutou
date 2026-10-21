@@ -14,7 +14,7 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
 .sb::-webkit-scrollbar { width:0; height:0; }
 .sb { scrollbar-width:none; }
 
-.btn-y { background:linear-gradient(180deg,#FFD700,#E6BF00); color:#000; font-family:'Bebas Neue',sans-serif; letter-spacing:1px; text-transform:uppercase; box-shadow:0 3px 0 var(--y2); transition:transform .1s, box-shadow .1s; }
+.btn-y { background:linear-gradient(180deg,#FFD700,#E6BF00); color:#000; font-family:'Bebas Neue',sans-serif; letter-spacing:1px; text-transform:uppercase; box-shadow:0 3px 0 var(--y2); transition:transform .1s, box-shadow .1s; cursor:pointer; }
 .btn-y:active { transform:translateY(3px); box-shadow:none; }
 .btn-y:disabled { background:#d9d9d9; color:#999; box-shadow:none; cursor:not-allowed; }
 .btn-k { background:var(--k); color:var(--y); font-family:'Bebas Neue',sans-serif; letter-spacing:1px; }
@@ -178,7 +178,8 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
         <span class="text-xs text-neutral-500 font-black">TOTAL</span>
         <span id="modal-total-price" class="font-bebas text-4xl leading-none">0,00 €</span>
       </div>
-      <button id="btn-modal-pay" onclick="submitOrder()" class="btn-y w-full py-3 text-2xl rounded-2xl mt-3">Confirmer et payer</button>
+      <!-- Bouton corrigé avec un ID explicite et un appel direct -->
+      <button id="btn-modal-pay" type="button" onclick="submitOrder()" class="btn-y w-full py-3 text-2xl rounded-2xl mt-3">Confirmer et payer</button>
     </div>
   </div>
 
@@ -214,7 +215,7 @@ const mk = a => [{t:'Taille du menu',o:SIZES},{t:'Votre plat',o:a.map(l=>({l,x:0
 const PRODUCTS = [
  { id:'menu-unchained', name:'Menu Unchained', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&', desc:'Burger, frites, boisson + jouet Requin Brainrot', groups:mk(['Burger Unchained Smash','Crispy Chicken Brainrot']) },
  { id:'menu-max', name:'Le Menu Max', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&', desc:'Burger Kraft, frites, boisson + figurine Minecraft', groups:mk(['Burger Max Craft','Chicken Max Crispy']) },
- { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada02b4&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
+ { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada022a&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
  { id:'toutou-burger', name:'Le Bon Toutou', category:'burgers', price:11.90, img:U('photo-1568901346375-23c9450c58cd'), desc:'Pur bœuf, cheddar fondu, sauce maison' },
  { id:'big-bark', name:'Big Bark', category:'burgers', price:12.90, img:U('photo-1586190848861-99aa4a171e90'), desc:'Double steak, oignons crispy, BBQ fumée' },
  { id:'crispy-puppy', name:'Crispy Puppy', category:'burgers', price:10.90, img:U('photo-1625813506062-0aeb1d7a094b'), desc:'Poulet croustillant, salade, mayo moutarde' },
