@@ -80,9 +80,13 @@
             100% { opacity: 0; }
         }
 
-        .ss-slide-1 { animation: slideFadeIn 15s infinite 0s; }
-        .ss-slide-2 { animation: slideFadeIn 15s infinite 5s; }
-        .ss-slide-3 { animation: slideFadeIn 15s infinite 10s; }
+        .ss-slide-1, .ss-slide-2, .ss-slide-3 {
+            opacity: 0;
+            animation-name: slideFadeIn;
+            animation-duration: 15s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: backwards;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-black p-2" onclick="resetInactivityTimer()" onmousemove="resetInactivityTimer()" ontouchstart="resetInactivityTimer()">
@@ -91,7 +95,7 @@
     <div class="relative w-[430px] h-[880px] bg-[#0A0A0A] rounded-3xl border-4 border-neutral-800 shadow-2xl flex flex-col overflow-hidden">
 
         <!-- ==================== SCREENSAVER / ÉCONOMISEUR D'ÉCRAN (30s) ==================== -->
-        <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-50 bg-black cursor-pointer overflow-hidden">
+        <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-[60] bg-black cursor-pointer overflow-hidden">
             <div class="absolute inset-0">
                 <!-- Slide 1 : Menu Unchained -->
                 <div class="ss-slide-1 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&')">
@@ -158,10 +162,10 @@
             </div>
 
             <div class="space-y-3">
-                <button onclick="startOrder('Sur Place')" class="w-full toutou-btn-yellow py-4 rounded-xl text-2xl text-black font-bebas flex items-center justify-center gap-2">
+                <button onclick="event.stopPropagation(); startOrder('Sur Place')" class="w-full toutou-btn-yellow py-4 rounded-xl text-2xl text-black font-bebas flex items-center justify-center gap-2">
                     <span>🍽️</span> SUR PLACE
                 </button>
-                <button onclick="startOrder('À Emporter')" class="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 py-3 rounded-xl text-xl text-white font-bebas flex items-center justify-center gap-2">
+                <button onclick="event.stopPropagation(); startOrder('À Emporter')" class="w-full bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 py-3 rounded-xl text-xl text-white font-bebas flex items-center justify-center gap-2">
                     <span>🛍️</span> À EMPORTER
                 </button>
             </div>
