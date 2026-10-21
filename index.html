@@ -49,7 +49,7 @@
             transform: scale(0.97);
         }
 
-        /* BARRE DE DÉFILEMENT PERSONNALISÉE (SCROLLBAR JAUNE/NOIR) */
+        /* BARRE DE DÉFILEMENT PERSONNALISÉE */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
             height: 6px;
@@ -71,18 +71,17 @@
             scrollbar-color: #FFD700 #121212;
         }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Animation screensaver */
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.9; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
+        /* Animation carrousel screensaver */
+        @keyframes slideFadeIn {
+            0% { opacity: 0; transform: scale(1.03); }
+            10% { opacity: 1; transform: scale(1); }
+            45% { opacity: 1; }
+            55% { opacity: 0; }
+            100% { opacity: 0; }
         }
 
-        .screensaver-bg {
-            animation: pulseGlow 6s infinite ease-in-out;
-        }
+        .ss-slide-1 { animation: slideFadeIn 10s infinite 0s; }
+        .ss-slide-2 { animation: slideFadeIn 10s infinite 5s; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-black p-2" onclick="resetInactivityTimer()" onmousemove="resetInactivityTimer()" ontouchstart="resetInactivityTimer()">
@@ -93,21 +92,34 @@
         <!-- ==================== SCREENSAVER / ÉCONOMISEUR D'ÉCRAN (30s) ==================== -->
         <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-50 bg-black cursor-pointer overflow-hidden">
             <div class="absolute inset-0">
-                <div class="screensaver-bg absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&')">
+                <!-- Slide 1 : Menu Max -->
+                <div class="ss-slide-1 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://wamonixx.fr/borne_de_commande_le_raz.html/image_2581da.jpg'), url('image_2581da.jpg');">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
-
                     <div class="relative z-10 flex justify-between items-center">
                         <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">NOUVEAUTÉ EXCLUSIVE</span>
                         <span class="text-xs font-mono text-yellow-300">MINECRAFT EDITION</span>
                     </div>
-
                     <div class="relative z-10 text-center mb-16">
                         <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">LE MENU MAX</h2>
                         <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET FIGURINE BON TOUTOU !</p>
                     </div>
                 </div>
+
+                <!-- Slide 2 : Menu Unchained -->
+                <div class="ss-slide-2 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://wamonixx.fr/borne_de_commande_le_raz.html/image_7beeff.jpg'), url('image_7beeff.jpg');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+                    <div class="relative z-10 flex justify-between items-center">
+                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">COLLAB EXCLUSIVE</span>
+                        <span class="text-xs font-mono text-yellow-300">UNCHAINED</span>
+                    </div>
+                    <div class="relative z-10 text-center mb-16">
+                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU UNCHAINED</h2>
+                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET REQUIN BRAINROT !</p>
+                    </div>
+                </div>
             </div>
 
+            <!-- Call to action permanent -->
             <div class="absolute bottom-6 left-6 right-6 z-20">
                 <div class="toutou-btn-yellow py-4 text-center text-2xl font-bebas rounded-2xl animate-pulse tracking-wider shadow-2xl">
                     TOUCHER L'ÉCRAN POUR COMMANDER
@@ -118,8 +130,8 @@
         <!-- ==================== ÉCRAN D'ACCUEIL (SPLASH) ==================== -->
         <div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#0A0A0A] flex flex-col justify-between p-6 cursor-pointer">
             <div class="flex justify-between items-center">
-                <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.0</span>
-                <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">MINECRAFT EDITION</span>
+                <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.5</span>
+                <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">STREET FOOD EDITION</span>
             </div>
 
             <div class="flex flex-col items-center my-auto text-center">
@@ -127,7 +139,7 @@
                     <span class="text-5xl font-graffiti text-black">BT</span>
                 </div>
                 <h1 class="text-5xl font-bebas text-white leading-none tracking-wide">BON TOUTOU</h1>
-                <p class="text-yellow-400 font-graffiti text-sm mt-1">BURGER & DOG HOUSE</p>
+                <p class="text-yellow-400 font-graffiti text-sm mt-1">LE FAST FOOD QUI FAIT WOUAF !</p>
                 <p class="text-neutral-400 text-xs italic mt-4">"LA MEUTE A DU GOÛT."</p>
             </div>
 
@@ -168,7 +180,7 @@
             <button onclick="filterCategory('desserts')" id="cat-desserts" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍰 Desserts</button>
         </nav>
 
-        <!-- ==================== GRILLE DE PRODUITS (AVEC SCROLLBAR SUR LE CÔTÉ) ==================== -->
+        <!-- ==================== GRILLE DE PRODUITS ==================== -->
         <main class="flex-1 p-2.5 pr-1 overflow-y-auto custom-scrollbar bg-[#0D0D0D]">
             <div id="products-grid" class="grid grid-cols-2 gap-2.5">
                 <!-- Injection via JS -->
@@ -292,9 +304,9 @@
     <script>
         const PRODUCTS = [
             // Menus Stars / Meute
-            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562069405393883156/6e62aceb-e159-4d19-a324-22d1385715b0.png?ex=6ad9f780&is=6ad8a600&hm=b45aa6f6619aee423be7273c113e7228c1ddd7f4c9b29802db64c83ba665e9bf&', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
-            { id: 'menu-unchained', name: 'Menu Unchained', category: 'stars', price: 15.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562440612668506203/3cb0d23b-d57d-462e-bac1-8c74666740fe.png?ex=6ad9ffb6&is=6ad8ae36&hm=d881d2eb78523e4e9189f7d85a2592ac65158ad99af52ae1ac6f17aec9498b6a&', desc: 'Double Smash + Frites + Boisson + Jouet Brainrot !', isStar: true, options: ['Toutou Double Smash', 'Toutou Crispy Chicken'] },
-            { id: 'menu-alpha-dog', name: 'Menu Alpha Dog', category: 'stars', price: 14.90, img: 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80', desc: 'Giant Hot-Dog + Frites Cheddar + Boisson 33cl', isStar: true, options: ['Hot-Dog Classic Cheese', 'Hot-Dog Crispy Bacon'] },
+            { id: 'menu-unchained', name: 'Menu Unchained', category: 'stars', price: 16.90, img: 'https://wamonixx.fr/borne_de_commande_le_raz.html/image_7beeff.jpg', desc: 'Burger Gourmet + Frites + Boisson + Jouet Requin Brainrot !', isStar: true, options: ['Burger Unchained Smash', 'Crispy Chicken Brainrot'] },
+            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://wamonixx.fr/borne_de_commande_le_raz.html/image_2581da.jpg', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
+            { id: 'menu-toutou-supreme', name: 'Menu Toutou Supreme', category: 'stars', price: 15.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Double Smash + Frites + Boisson + Jouet Nossy Balle !', isStar: true, options: ['Toutou Double Smash', 'Toutou Crispy Chicken'] },
 
             // Burgers
             { id: 'toutou-burger', name: 'Le Bon Toutou', category: 'burgers', price: 11.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Steak haché pur bœuf, cheddar fondu, sauce maison' },
