@@ -71,17 +71,18 @@
             scrollbar-color: #FFD700 #121212;
         }
 
-        /* Animation carrousel screensaver */
+        /* Animation carrousel screensaver (3 slides) */
         @keyframes slideFadeIn {
             0% { opacity: 0; transform: scale(1.03); }
-            10% { opacity: 1; transform: scale(1); }
-            45% { opacity: 1; }
-            55% { opacity: 0; }
+            5% { opacity: 1; transform: scale(1); }
+            30% { opacity: 1; }
+            38% { opacity: 0; }
             100% { opacity: 0; }
         }
 
-        .ss-slide-1 { animation: slideFadeIn 10s infinite 0s; }
-        .ss-slide-2 { animation: slideFadeIn 10s infinite 5s; }
+        .ss-slide-1 { animation: slideFadeIn 15s infinite 0s; }
+        .ss-slide-2 { animation: slideFadeIn 15s infinite 5s; }
+        .ss-slide-3 { animation: slideFadeIn 15s infinite 10s; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-black p-2" onclick="resetInactivityTimer()" onmousemove="resetInactivityTimer()" ontouchstart="resetInactivityTimer()">
@@ -100,8 +101,8 @@
                         <span class="text-xs font-mono text-yellow-300">Yo les boys c'est Unchained</span>
                     </div>
                     <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">LE MENU MAX</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET FIGURINE BON TOUTOU !</p>
+                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU UNCHAINED</h2>
+                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET REQUIN BRAINROT !</p>
                     </div>
                 </div>
 
@@ -113,26 +114,25 @@
                         <span class="text-xs font-mono text-yellow-300">Minecraft Edition</span>
                     </div>
                     <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU UNCHAINED</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET REQUIN BRAINROT !</p>
+                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">LE MENU MAX</h2>
+                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET FIGURINE BON TOUTOU !</p>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Slide 3 : Menu Strix -->
-                <div class="ss-slide-2 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562443826034114602/8fe42332-c4ce-4836-bae5-5042b3544b64.png?ex=6ada02b4&is=6ad8b134&hm=131f4aba5b4cccf48cd117385d0482afc80fe256deb69645492f5e6b26533788&')">
+
+                <!-- Slide 3 : Menu Strix -->
+                <div class="ss-slide-3 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562443826034114602/8fe42332-c4ce-4836-bae5-5042b3544b64.png?ex=6ada02b4&is=6ad8b134&hm=131f4aba5b4cccf48cd117385d0482afc80fe256deb69645492f5e6b26533788&')">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
                     <div class="relative z-10 flex justify-between items-center">
-                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">COLLAB EXCLUSIVE</span>
-                        <span class="text-xs font-mono text-yellow-300">Minecraft Edition</span>
+                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">EDITION CHAOS</span>
+                        <span class="text-xs font-mono text-yellow-300">Strix Collab</span>
                     </div>
                     <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU UNCHAINED</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET REQUIN BRAINROT !</p>
+                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU STRIX</h2>
+                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">SENSATIONS EXTRÊMES !</p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Call to action permanent -->
             <div class="absolute bottom-6 left-6 right-6 z-20">
                 <div class="toutou-btn-yellow py-4 text-center text-2xl font-bebas rounded-2xl animate-pulse tracking-wider shadow-2xl">
