@@ -1,609 +1,381 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borne BON TOUTOU RESTAURANT - Kiosque Interactif</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --font-title: 'Bebas Neue', sans-serif;
-            --font-graffiti: 'Permanent Marker', cursive;
-            --font-body: 'Montserrat', sans-serif;
-            --color-toutou-yellow: #FFD700;
-            --color-toutou-dark: #0A0A0A;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borne BON TOUTOU RESTAURANT</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@500;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+:root { --y:#FFD700; --y2:#CCAC00; --k:#0A0A0A; --bg:#F1F1F1; --ink:#1a1a1a; --mut:#6b6b6b; }
+body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink); user-select:none; overflow:hidden; }
+.font-bebas { font-family:'Bebas Neue',sans-serif; }
+.font-graffiti { font-family:'Permanent Marker',cursive; }
+.sb::-webkit-scrollbar { width:0; height:0; }
+.sb { scrollbar-width:none; }
 
-        body {
-            font-family: var(--font-body);
-            background-color: #050505;
-            color: #FFFFFF;
-            user-select: none;
-            overflow: hidden;
-        }
+.btn-y { background:linear-gradient(180deg,#FFD700,#E6BF00); color:#000; font-family:'Bebas Neue',sans-serif; letter-spacing:1px; text-transform:uppercase; box-shadow:0 3px 0 var(--y2); transition:transform .1s, box-shadow .1s; }
+.btn-y:active { transform:translateY(3px); box-shadow:none; }
+.btn-y:disabled { background:#d9d9d9; color:#999; box-shadow:none; }
+.btn-k { background:var(--k); color:var(--y); font-family:'Bebas Neue',sans-serif; letter-spacing:1px; }
 
-        .font-bebas { font-family: var(--font-title); }
-        .font-graffiti { font-family: var(--font-graffiti); }
+/* Catégories (barre horizontale à grosses tuiles) */
+.cat { flex:0 0 auto; width:74px; padding:8px 0 6px; display:flex; flex-direction:column; align-items:center; gap:3px; border-bottom:5px solid transparent; color:var(--mut); }
+.cat .ic { width:46px; height:46px; border-radius:14px; background:#f3f3f3; display:flex; align-items:center; justify-content:center; font-size:26px; }
+.cat .lb { font-size:11px; font-weight:900; }
+.cat.on { border-bottom-color:var(--y); color:var(--k); }
+.cat.on .ic { background:var(--y); }
 
-        /* Style Urbain et Bords Néon Jaune */
-        .toutou-card {
-            background: linear-gradient(145deg, #181818, #0d0d0d);
-            border: 2px solid #282828;
-            transition: all 0.2s ease-in-out;
-        }
-        .toutou-card:hover {
-            border-color: var(--color-toutou-yellow);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-        }
+/* Cartes produit blanches */
+.prod { background:#fff; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; text-align:left; box-shadow:0 2px 6px rgba(0,0,0,.08); transition:transform .1s; }
+.prod:active { transform:scale(.96); }
+.prod img { width:100%; height:112px; object-fit:cover; display:block; background:#eee; }
+.prod .badge { position:absolute; top:8px; left:8px; background:var(--k); color:var(--y); font-size:9px; font-weight:900; padding:3px 8px; border-radius:99px; }
+.prod .bd { padding:9px 11px 11px; display:flex; flex-direction:column; gap:2px; flex:1; }
+.prod .add { width:34px; height:34px; border-radius:99px; background:var(--y); color:#000; font-weight:900; font-size:20px; line-height:34px; text-align:center; }
 
-        .toutou-btn-yellow {
-            background: linear-gradient(180deg, #FFD700 0%, #CCAC00 100%);
-            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
-            text-transform: uppercase;
-            font-family: var(--font-title);
-            letter-spacing: 1px;
-            color: #000000;
-        }
-        .toutou-btn-yellow:active {
-            transform: scale(0.97);
-        }
+/* Choix menu */
+.chip { padding:9px 12px; border-radius:14px; background:#f3f3f3; border:2px solid transparent; font-size:11px; font-weight:700; color:#333; }
+.chip.on { background:#fff8cc; border-color:var(--y); color:#000; }
 
-        /* BARRE DE DÉFILEMENT PERSONNALISÉE */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #121212;
-            border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #FFD700;
-            border-radius: 8px;
-            border: 2px solid #121212;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #FFE44D;
-        }
-        .custom-scrollbar {
-            scrollbar-width: thin;
-            scrollbar-color: #FFD700 #121212;
-        }
+/* Accueil */
+.kb { aspect-ratio:1/1; border-radius:1.75rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem; transition:transform .12s; box-shadow:0 6px 16px rgba(0,0,0,.15); }
+.kb:active { transform:scale(.94); }
+.kb .ci { width:5rem; height:5rem; border-radius:99px; display:flex; align-items:center; justify-content:center; font-size:2.75rem; }
 
-        /* Animation carrousel screensaver (3 slides) */
-        @keyframes slideFadeIn {
-            0% { opacity: 0; transform: scale(1.03); }
-            5% { opacity: 1; transform: scale(1); }
-            30% { opacity: 1; }
-            38% { opacity: 0; }
-            100% { opacity: 0; }
-        }
-
-        .ss-slide-1, .ss-slide-2, .ss-slide-3 {
-            opacity: 0;
-            animation-name: slideFadeIn;
-            animation-duration: 15s;
-            animation-iteration-count: infinite;
-            animation-fill-mode: backwards;
-        }
-        /* Boutons carrés de l'écran d'accueil */
-.kiosk-btn {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-    border-radius: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-.kiosk-btn:active { transform: scale(0.94); }
-
-/* Reflet diagonal */
-.kiosk-btn::after {
-    content: '';
-    position: absolute;
-    top: -60%;
-    left: -40%;
-    width: 60%;
-    height: 220%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-    transform: rotate(20deg);
-    pointer-events: none;
-}
-
-.kiosk-btn-yellow {
-    background: linear-gradient(160deg, #FFE44D 0%, #FFD700 45%, #CCAC00 100%);
-    box-shadow: 0 10px 28px rgba(255, 215, 0, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.45);
-    color: #000;
-}
-.kiosk-btn-dark {
-    background: linear-gradient(160deg, #202020, #0e0e0e);
-    border: 2px solid #FFD700;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.22), inset 0 0 24px rgba(255, 215, 0, 0.06);
-    color: #fff;
-}
-
-.kiosk-icon {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.75rem;
-}
-.kiosk-btn-yellow .kiosk-icon { background: rgba(0, 0, 0, 0.12); }
-.kiosk-btn-dark .kiosk-icon {
-    background: rgba(255, 215, 0, 0.12);
-    border: 1px solid rgba(255, 215, 0, 0.4);
-}
-    </style>
+/* Screensaver */
+@keyframes sl { 0%{opacity:0;transform:scale(1.03)} 5%{opacity:1;transform:scale(1)} 30%{opacity:1} 38%{opacity:0} 100%{opacity:0} }
+.ss { opacity:0; animation-name:sl; animation-duration:15s; animation-iteration-count:infinite; animation-fill-mode:backwards; }
+.ss1{animation-delay:0s} .ss2{animation-delay:5s} .ss3{animation-delay:10s}
+@keyframes up { from{transform:translateY(100%)} to{transform:none} }
+.sheet { animation:up .25s ease-out; }
+@keyframes toast { 0%{opacity:0;transform:translate(-50%,10px)} 12%,80%{opacity:1;transform:translate(-50%,0)} 100%{opacity:0} }
+.toast { animation:toast 1.6s forwards; }
+@keyframes bar { from{width:100%} to{width:0} }
+</style>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-black p-2" onclick="resetInactivityTimer()" onmousemove="resetInactivityTimer()" ontouchstart="resetInactivityTimer()">
 
-    <!-- CONTENEUR BORNE DE COMMANDE -->
-    <div class="relative w-[430px] h-[880px] bg-[#0A0A0A] rounded-3xl border-4 border-neutral-800 shadow-2xl flex flex-col overflow-hidden">
+<div class="relative w-[430px] h-[880px] bg-[#F1F1F1] rounded-3xl border-4 border-neutral-800 shadow-2xl flex flex-col overflow-hidden">
 
-        <!-- ==================== SCREENSAVER / ÉCONOMISEUR D'ÉCRAN (30s) ==================== -->
-        <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-[60] bg-black cursor-pointer overflow-hidden">
-            <div class="absolute inset-0">
-                <!-- Slide 1 : Menu Unchained -->
-                <div class="ss-slide-1 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&')">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
-                    <div class="relative z-10 flex justify-between items-center">
-                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">NOUVEAUTÉ EXCLUSIVE</span>
-                        <span class="text-xs font-mono text-yellow-300">Yo les boys c'est Unchained</span>
-                    </div>
-                    <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU UNCHAINED</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET REQUIN BRAINROT !</p>
-                    </div>
-                </div>
-
-                <!-- Slide 2 : Menu Max -->
-                <div class="ss-slide-2 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&')">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
-                    <div class="relative z-10 flex justify-between items-center">
-                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">COLLAB EXCLUSIVE</span>
-                        <span class="text-xs font-mono text-yellow-300">Minecraft Edition</span>
-                    </div>
-                    <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">LE MENU MAX</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">AVEC LE JOUET FIGURINE BON TOUTOU !</p>
-                    </div>
-                </div>
-
-                <!-- Slide 3 : Menu Strix -->
-                <div class="ss-slide-3 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562443826034114602/8fe42332-c4ce-4836-bae5-5042b3544b64.png?ex=6ada02b4&is=6ad8b134&hm=131f4aba5b4cccf48cd117385d0482afc80fe256deb69645492f5e6b26533788&')">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
-                    <div class="relative z-10 flex justify-between items-center">
-                        <span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg shadow">EDITION CHAOS</span>
-                        <span class="text-xs font-mono text-yellow-300">Strix Collab</span>
-                    </div>
-                    <div class="relative z-10 text-center mb-16">
-                        <h2 class="text-6xl font-bebas text-yellow-400 leading-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">MENU STRIX</h2>
-                        <p class="text-white font-graffiti text-sm mt-1 drop-shadow">SENSATIONS EXTRÊMES !</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Call to action permanent -->
-            <div class="absolute bottom-6 left-6 right-6 z-20">
-                <div class="toutou-btn-yellow py-4 text-center text-2xl font-bebas rounded-2xl animate-pulse tracking-wider shadow-2xl">
-                    TOUCHER L'ÉCRAN POUR COMMANDER
-                </div>
-            </div>
-        </div>
-
-       <!-- ==================== ÉCRAN D'ACCUEIL (SPLASH) ==================== -->
-<div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#0A0A0A] flex flex-col p-6 cursor-pointer">
-    <div class="flex justify-between items-center">
-        <span class="text-xs text-neutral-400 font-mono">KIOSQUE BON TOUTOU v2.5</span>
-        <span class="text-xs px-2 py-0.5 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-full font-bold">STREET FOOD EDITION</span>
+  <!-- SCREENSAVER -->
+  <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-[60] bg-black cursor-pointer overflow-hidden">
+    <div class="ss ss1 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image:url('https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&')">
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+      <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">NOUVEAUTÉ EXCLUSIVE</span></div>
+      <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">MENU UNCHAINED</h2><p class="text-white font-graffiti text-sm mt-1">AVEC LE JOUET REQUIN BRAINROT !</p></div>
     </div>
-
-    <div class="flex flex-col items-center text-center mt-16">
-        <div class="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center border-2 border-yellow-300 shadow-lg shadow-yellow-400/50 mb-4 transform -rotate-3">
-            <span class="text-5xl font-graffiti text-black">BT</span>
-        </div>
-        <h1 class="text-5xl font-bebas text-white leading-none tracking-wide">BON TOUTOU</h1>
-        <p class="text-yellow-400 font-graffiti text-sm mt-1">LE FAST FOOD QUI FAIT WOUAF !</p>
-        <p class="text-neutral-400 text-xs italic mt-4">"LA MEUTE A DU GOÛT."</p>
+    <div class="ss ss2 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image:url('https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&')">
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+      <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">COLLAB EXCLUSIVE</span></div>
+      <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">LE MENU MAX</h2><p class="text-white font-graffiti text-sm mt-1">AVEC LE JOUET FIGURINE BON TOUTOU !</p></div>
     </div>
+    <div class="ss ss3 absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image:url('https://cdn.discordapp.com/attachments/1094196659971424266/1562443826034114602/8fe42332-c4ce-4836-bae5-5042b3544b64.png?ex=6ada02b4&is=6ad8b134&hm=131f4aba5b4cccf48cd117385d0482afc80fe256deb69645492f5e6b26533788&')">
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
+      <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">EDITION CHAOS</span></div>
+      <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">MENU STRIX</h2><p class="text-white font-graffiti text-sm mt-1">SENSATIONS EXTRÊMES !</p></div>
+    </div>
+    <div class="absolute bottom-6 left-6 right-6 z-20"><div class="btn-y py-4 text-center text-2xl rounded-2xl animate-pulse">Touchez l'écran pour commander</div></div>
+  </div>
 
-    <!-- Boutons carrés côte à côte -->
-<div class="grid grid-cols-2 gap-4 mt-10">
-    <button onclick="event.stopPropagation(); startOrder('Sur Place')" class="kiosk-btn kiosk-btn-yellow">
-        <span class="kiosk-icon">🍽️</span>
-        <span class="font-bebas text-3xl leading-none tracking-wide">SUR PLACE</span>
-        <span class="text-[10px] font-bold uppercase tracking-widest opacity-70">Je mange ici</span>
+  <!-- ACCUEIL -->
+  <div id="splash-screen" onclick="startOrder()" class="absolute inset-0 z-40 bg-[#F1F1F1] flex flex-col cursor-pointer">
+    <div class="bg-yellow-400 px-6 pt-10 pb-12 rounded-b-[3rem] text-center">
+      <div class="w-28 h-28 bg-black rounded-[2rem] flex items-center justify-center mx-auto mb-3 -rotate-3 shadow-xl"><span class="text-6xl font-graffiti text-yellow-400">BT</span></div>
+      <h1 class="text-7xl font-bebas leading-none tracking-wide text-black">BON TOUTOU</h1>
+      <p class="font-graffiti text-sm text-black mt-1">LE FAST FOOD QUI FAIT WOUAF !</p>
+    </div>
+    <div class="flex-1 flex flex-col justify-center px-6">
+      <h2 class="text-center font-bebas text-4xl leading-none">Où mangez-vous ?</h2>
+      <p class="text-center text-neutral-500 text-sm mt-1 mb-6">Touchez pour commencer votre commande</p>
+      <div class="grid grid-cols-2 gap-4">
+        <button onclick="event.stopPropagation(); startOrder('Sur Place')" class="kb bg-yellow-400 text-black"><span class="ci bg-black/10">🍽️</span><span class="font-bebas text-3xl leading-none">Sur place</span></button>
+        <button onclick="event.stopPropagation(); startOrder('À Emporter')" class="kb bg-black text-white"><span class="ci bg-yellow-400/15 border border-yellow-400/40">🛍️</span><span class="font-bebas text-3xl leading-none">À emporter</span></button>
+      </div>
+    </div>
+    <p class="text-center text-neutral-500 text-xs italic pb-6">"LA MEUTE A DU GOÛT."</p>
+  </div>
+
+  <!-- EN-TÊTE -->
+  <header class="bg-black text-white px-3 py-2.5 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-2">
+      <div class="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-graffiti text-black text-lg">BT</div>
+      <h1 class="font-bebas text-2xl leading-none tracking-wide">BON TOUTOU</h1>
+    </div>
+    <button onclick="toggleOrderType()" class="bg-yellow-400 text-black rounded-full px-3.5 py-1.5 text-xs font-black flex items-center gap-1.5">
+      <span id="order-type-icon">🍽️</span><span id="order-type-badge">Sur Place</span>
     </button>
-    <button onclick="event.stopPropagation(); startOrder('À Emporter')" class="kiosk-btn kiosk-btn-dark">
-        <span class="kiosk-icon">🛍️</span>
-        <span class="font-bebas text-3xl leading-none tracking-wide">À EMPORTER</span>
-        <span class="text-[10px] font-bold uppercase tracking-widest text-yellow-400">Je repars avec</span>
-    </button>
-</div>
-</div>
+  </header>
 
-        <!-- ==================== EN-TÊTE ==================== -->
-        <header class="bg-neutral-900 border-b border-neutral-800 p-3 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-2">
-                <div class="w-9 h-9 bg-yellow-400 rounded-xl flex items-center justify-center font-graffiti text-black text-lg border border-yellow-300">
-                    BT
-                </div>
-                <div>
-                    <h1 class="text-xl font-bebas leading-none text-white tracking-wide">BON TOUTOU RESTAURANT</h1>
-                    <span id="order-type-badge" class="text-[10px] text-yellow-400 font-bold uppercase tracking-wider">Sur Place</span>
-                </div>
-            </div>
-            <button onclick="toggleOrderType()" class="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg text-xs font-bold text-neutral-300">
-                <span id="order-type-icon">🍽️</span> Changement
-            </button>
-        </header>
-
-        <!-- ==================== BARRE DES CATÉGORIES ==================== -->
-        <nav class="flex border-b border-neutral-800 bg-black shrink-0 overflow-x-auto custom-scrollbar p-1.5 gap-1.5">
-            <button onclick="filterCategory('all')" id="cat-all" class="cat-btn px-3 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold shrink-0">Tous</button>
-            <button onclick="filterCategory('stars')" id="cat-stars" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">⭐ Menus Meute</button>
-            <button onclick="filterCategory('burgers')" id="cat-burgers" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍔 Burgers</button>
-            <button onclick="filterCategory('hotdogs')" id="cat-hotdogs" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🌭 Hot-Dogs</button>
-            <button onclick="filterCategory('sides')" id="cat-sides" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍟 Sides</button>
-            <button onclick="filterCategory('drinks')" id="cat-drinks" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🥤 Boissons</button>
-            <button onclick="filterCategory('desserts')" id="cat-desserts" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍰 Desserts</button>
-        </nav>
-
-        <!-- ==================== GRILLE DE PRODUITS ==================== -->
-        <main class="flex-1 p-2.5 pr-1 overflow-y-auto custom-scrollbar bg-[#0D0D0D]">
-            <div id="products-grid" class="grid grid-cols-2 gap-2.5">
-                <!-- Injection via JS -->
-            </div>
-        </main>
-
-        <!-- ==================== PIED DE PAGE / PANIER ==================== -->
-        <footer class="bg-neutral-900 border-t border-neutral-800 p-3 shrink-0">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                    <div class="relative">
-                        <span class="text-2xl">🛍️</span>
-                        <span id="cart-badge" class="absolute -top-1 -right-2 bg-yellow-400 text-black text-[10px] font-bold px-1.5 py-0.2 rounded-full border border-black">0</span>
-                    </div>
-                    <div>
-                        <div class="text-[10px] text-neutral-400">TOTAL COMMANDE</div>
-                        <div id="cart-total-display" class="text-xl font-bebas text-white leading-none">0,00 €</div>
-                    </div>
-                </div>
-                <button onclick="openCartModal()" class="text-xs text-yellow-400 hover:text-yellow-300 font-bold underline">Détails de la commande</button>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="resetOrder()" class="w-1/3 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-bold rounded-xl border border-neutral-700">Vider</button>
-                <button id="btn-checkout" onclick="openCartModal()" disabled class="w-2/3 toutou-btn-yellow py-2.5 text-lg font-bebas text-black rounded-xl disabled:opacity-40 disabled:cursor-not-allowed">Valider la commande</button>
-            </div>
-        </footer>
-
-        <!-- ==================== MODAL CONFIGURATEUR MENU STAR ==================== -->
-        <div id="star-modal" class="hidden absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-end p-3">
-            <div class="toutou-card rounded-2xl p-4 flex flex-col max-h-[90%] border-yellow-400">
-                <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
-                    <div>
-                        <h3 id="modal-star-title" class="text-2xl font-bebas text-white leading-none">MENU STAR</h3>
-                        <p id="modal-star-sub" class="text-xs text-yellow-400 font-graffiti">Jouet Collector Inclus</p>
-                    </div>
-                    <button onclick="closeStarModal()" class="text-neutral-400 font-bold px-2 py-1 text-lg">✕</button>
-                </div>
-
-                <div class="overflow-y-auto space-y-3 my-3 custom-scrollbar pr-1">
-                    <div>
-                        <label class="text-xs font-bold text-neutral-400 uppercase">1. Choix du Plat</label>
-                        <select id="star-plat-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
-                            <!-- JS Inject -->
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-neutral-400 uppercase">2. Choix de l'accompagnement</label>
-                        <select id="star-side-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
-                            <option value="Frites Croquantes">Frites Croquantes</option>
-                            <option value="Frites Cheese Cheddar (+1.50€)">Frites Cheese Cheddar (+1.50€)</option>
-                            <option value="Nuggets Poulet (x6) (+2.00€)">Nuggets Poulet (x6) (+2.00€)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-neutral-400 uppercase">3. Choix de la Boisson</label>
-                        <select id="star-drink-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
-                            <option value="Coca-Cola 33cl">Coca-Cola 33cl</option>
-                            <option value="Ice Tea Pêche 33cl">Ice Tea Pêche 33cl</option>
-                            <option value="Oasis Tropical 33cl">Oasis Tropical 33cl</option>
-                            <option value="Eau Minérale 50cl">Eau Minérale 50cl</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="btn-add-star" onclick="confirmStarMenu()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
-                    Ajouter au panier • <span id="star-price-display">0.00 €</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- ==================== MODAL PANIER ==================== -->
-        <div id="cart-modal" class="hidden absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-end p-3">
-            <div class="toutou-card rounded-2xl p-4 flex flex-col max-h-[85%] border-neutral-700">
-                <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
-                    <h3 class="text-2xl font-bebas text-white">VOTRE PANIER</h3>
-                    <button onclick="closeCartModal()" class="text-neutral-400 font-bold px-2 text-lg">✕</button>
-                </div>
-
-                <div id="cart-items-list" class="flex-1 overflow-y-auto space-y-2 my-3 custom-scrollbar pr-1"></div>
-
-                <div class="border-t border-neutral-800 pt-2 flex justify-between items-center mb-3">
-                    <span class="text-xs text-neutral-400 font-bold">TOTAL À PAYER:</span>
-                    <span id="modal-total-price" class="text-2xl font-bebas text-yellow-400">0,00 €</span>
-                </div>
-
-                <button onclick="submitOrder()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
-                    Confirmer et Payer
-                </button>
-            </div>
-        </div>
-
-        <!-- ==================== ÉCRAN DE CONFIRMATION / TICKET ==================== -->
-        <div id="confirmation-screen" class="hidden absolute inset-0 z-50 bg-[#0A0A0A] p-6 flex flex-col justify-between text-center">
-            <div class="text-xs text-neutral-500 font-mono">
-                BON TOUTOU RESTAURANT • KIOSQUE #01
-            </div>
-
-            <div class="my-auto">
-                <div class="w-16 h-16 bg-yellow-950 border border-yellow-400 text-yellow-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-3">
-                    ✓
-                </div>
-                <h2 class="text-3xl font-bebas text-white">COMMANDE VALIDÉE !</h2>
-                <p class="text-xs text-neutral-400">Conservez votre numéro de commande :</p>
-
-                <div class="toutou-card bg-neutral-900 p-4 my-4 border-2 border-yellow-400 rounded-2xl inline-block w-full">
-                    <p class="text-xs text-neutral-400 font-mono">TICKET N°</p>
-                    <p id="order-number" class="text-6xl font-bebas text-yellow-400 my-1">#42</p>
-                </div>
-
-                <div id="receipt-summary" class="text-xs text-left bg-neutral-900 border border-neutral-800 p-3 rounded-xl max-h-36 overflow-y-auto custom-scrollbar font-mono text-neutral-300"></div>
-            </div>
-
-            <button onclick="finishAndReset()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
-                Terminer
-            </button>
-        </div>
-
+  <!-- BANDEAU PROMO -->
+  <div class="bg-yellow-400 px-4 py-2.5 flex items-center justify-between shrink-0 border-b-4 border-black">
+    <div>
+      <div class="font-bebas text-2xl leading-none text-black">Jouet collector offert</div>
+      <div class="font-graffiti text-[11px] text-black/70">avec chaque Menu Meute !</div>
     </div>
+    <button onclick="filterCategory('stars')" class="btn-k bg-black text-yellow-400 font-bebas text-lg rounded-full px-4 py-1.5">Voir</button>
+  </div>
 
-    <!-- JavaScript applicatif -->
-    <script>
-        const PRODUCTS = [
-            // Menus Stars / Meute
-            { id: 'menu-unchained', name: 'Menu Unchained', category: 'stars', price: 16.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&', desc: 'Burger Gourmet + Frites + Boisson + Jouet Requin Brainrot !', isStar: true, options: ['Burger Unchained Smash', 'Crispy Chicken Brainrot'] },
-            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
-            { id: 'menu-strix', name: 'Menu Strix', category: 'stars', price: 15.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada022a&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc: 'Double Smash + Frites + Boisson + Jouet Nossy Balle !', isStar: true, options: ['Toutou Double Smash', 'Toutou Crispy Chicken'] },
+  <!-- CATÉGORIES -->
+  <nav class="bg-white flex overflow-x-auto sb px-1 shrink-0 shadow-sm">
+    <button id="cat-stars" onclick="filterCategory('stars')" class="cat"><span class="ic">⭐</span><span class="lb">Menus</span></button>
+    <button id="cat-burgers" onclick="filterCategory('burgers')" class="cat"><span class="ic">🍔</span><span class="lb">Burgers</span></button>
+    <button id="cat-hotdogs" onclick="filterCategory('hotdogs')" class="cat"><span class="ic">🌭</span><span class="lb">Hot-Dogs</span></button>
+    <button id="cat-sides" onclick="filterCategory('sides')" class="cat"><span class="ic">🍟</span><span class="lb">Sides</span></button>
+    <button id="cat-drinks" onclick="filterCategory('drinks')" class="cat"><span class="ic">🥤</span><span class="lb">Boissons</span></button>
+    <button id="cat-desserts" onclick="filterCategory('desserts')" class="cat"><span class="ic">🍰</span><span class="lb">Desserts</span></button>
+  </nav>
 
-            // Burgers
-            { id: 'toutou-burger', name: 'Le Bon Toutou', category: 'burgers', price: 11.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Steak haché pur bœuf, cheddar fondu, sauce maison' },
-            { id: 'big-bark', name: 'Big Bark', category: 'burgers', price: 12.90, img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80', desc: 'Double steak, oignons crispy, sauce BBQ fumée' },
-            { id: 'crispy-puppy', name: 'Crispy Puppy', category: 'burgers', price: 10.90, img: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=500&q=80', desc: 'Poulet croustillant, salade, mayo moutarde douce' },
+  <!-- PRODUITS -->
+  <main id="main" class="flex-1 overflow-y-auto sb p-3">
+    <h2 id="cat-title" class="font-bebas text-3xl leading-none mb-3"></h2>
+    <div id="products-grid" class="grid grid-cols-2 gap-3 pb-3"></div>
+  </main>
 
-            // Hot-Dogs
-            { id: 'hd-classic', name: 'Hot-Dog Classic', category: 'hotdogs', price: 7.90, img: 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80', desc: 'Saucisse de volaille, moutarde douce, oignons frits' },
-            { id: 'hd-cheddar', name: 'Hot-Dog Cheddar Melt', category: 'hotdogs', price: 8.90, img: 'https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=500&q=80', desc: 'Nappé de véritable cheddar chaud et bacon croustillant' },
+  <div id="toast" class="hidden absolute bottom-28 left-1/2 z-30 bg-black text-yellow-400 text-sm font-bold px-4 py-2 rounded-full shadow-xl whitespace-nowrap"></div>
 
-            // Sides
-            { id: 'frites-croquantes', name: 'Frites Croquantes', category: 'sides', price: 3.00, img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80', desc: 'Frites maison coupées épaisses' },
-            { id: 'frites-cheddar', name: 'Frites Cheese Cheddar', category: 'sides', price: 4.50, img: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=500&q=80', desc: 'Sauce fromage cheddar chaud' },
-            { id: 'nuggets-6', name: '6 Nuggets Poulet', category: 'sides', price: 5.90, img: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=500&q=80', desc: 'Bouchées de poulet croustillantes' },
+  <!-- BARRE PANIER -->
+  <footer class="bg-white px-3 py-3 shrink-0 flex items-center gap-3 shadow-[0_-4px_14px_rgba(0,0,0,.12)]">
+    <button onclick="resetOrder()" class="text-xs font-black text-neutral-500 w-14 text-left leading-tight">✕<br>Annuler</button>
+    <div class="flex-1">
+      <div class="text-[11px] text-neutral-500 font-bold">Mon panier • <span id="cart-badge">0</span> article(s)</div>
+      <div id="cart-total-display" class="font-bebas text-3xl leading-none">0,00 €</div>
+    </div>
+    <button id="btn-checkout" onclick="openCartModal()" disabled class="btn-y px-6 py-3 rounded-2xl text-xl">Payer</button>
+  </footer>
 
-            // Boissons & Desserts
-            { id: 'coca-cola', name: 'Coca-Cola 33cl', category: 'drinks', price: 2.50, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80', desc: 'Rafraîchissant' },
-            { id: 'ice-tea', name: 'Ice Tea 33cl', category: 'drinks', price: 2.50, img: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=500&q=80', desc: 'Saveur Pêche' },
-            { id: 'donut-yellow', name: 'Donut Yellow Glaze', category: 'desserts', price: 3.20, img: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=500&q=80', desc: 'Nappage citron & vanille' },
-            { id: 'cookie-choco', name: 'Cookie Toutou Choco', category: 'desserts', price: 3.00, img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=500&q=80', desc: 'Grand cookie aux pépites' }
-        ];
+  <!-- MODAL MENU -->
+  <div id="star-modal" class="hidden absolute inset-0 z-50 bg-black/70 flex flex-col justify-end">
+    <div class="sheet bg-white rounded-t-3xl flex flex-col max-h-[92%] overflow-hidden">
+      <div class="relative">
+        <img id="star-img" class="w-full h-40 object-cover" alt="">
+        <button onclick="closeStarModal()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black text-white font-bold">✕</button>
+      </div>
+      <div class="px-4 pt-3">
+        <h3 id="modal-star-title" class="font-bebas text-3xl leading-none">MENU</h3>
+        <p id="modal-star-sub" class="text-xs text-neutral-500"></p>
+      </div>
+      <div id="star-options" class="overflow-y-auto sb space-y-4 px-4 py-4"></div>
+      <div class="p-3 border-t border-neutral-200">
+        <button onclick="confirmStarMenu()" class="btn-y w-full py-3 text-2xl rounded-2xl">Ajouter à ma commande • <span id="star-price-display"></span></button>
+      </div>
+    </div>
+  </div>
 
-        let cart = [];
-        let currentCategory = 'all';
-        let orderType = 'Sur Place';
-        let currentStarProduct = null;
-        let inactivityTimer = null;
+  <!-- MODAL PANIER -->
+  <div id="cart-modal" class="hidden absolute inset-0 z-50 bg-black/70 flex flex-col justify-end">
+    <div class="sheet bg-white rounded-t-3xl p-4 flex flex-col max-h-[90%]">
+      <div class="flex justify-between items-center pb-2">
+        <h3 class="font-bebas text-3xl">Ma commande</h3>
+        <button onclick="closeCartModal()" class="w-9 h-9 rounded-full bg-neutral-200 font-bold">✕</button>
+      </div>
+      <div id="cart-items-list" class="flex-1 overflow-y-auto sb space-y-2"></div>
+      <div class="pt-3">
+        <div class="font-bebas text-xl leading-none mb-2">Un petit extra ?</div>
+        <div id="upsell" class="flex gap-2 overflow-x-auto sb"></div>
+      </div>
+      <div class="border-t border-neutral-200 mt-3 pt-3 flex justify-between items-center">
+        <span class="text-xs text-neutral-500 font-black">TOTAL</span>
+        <span id="modal-total-price" class="font-bebas text-4xl leading-none">0,00 €</span>
+      </div>
+      <button onclick="submitOrder()" class="btn-y w-full py-3 text-2xl rounded-2xl mt-3">Confirmer et payer</button>
+    </div>
+  </div>
 
-        function startOrder(type = 'Sur Place') {
-            orderType = type;
-            document.getElementById('order-type-badge').textContent = orderType;
-            document.getElementById('order-type-icon').textContent = orderType === 'Sur Place' ? '🍽️' : '🛍️';
-            document.getElementById('splash-screen').classList.add('hidden');
-            resetInactivityTimer();
-        }
+  <!-- CONFIRMATION -->
+  <div id="confirmation-screen" class="hidden absolute inset-0 z-50 bg-[#F1F1F1] flex flex-col text-center">
+    <div class="bg-yellow-400 pt-10 pb-8 rounded-b-[2.5rem]">
+      <div class="w-16 h-16 bg-black text-yellow-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-2">✓</div>
+      <h2 class="font-bebas text-4xl leading-none">Merci, commande validée !</h2>
+      <p id="order-where" class="text-sm font-bold mt-1"></p>
+    </div>
+    <div class="flex-1 px-6 py-5 flex flex-col justify-center">
+      <p class="text-xs text-neutral-500 font-bold">Votre numéro de commande</p>
+      <p id="order-number" class="font-bebas text-9xl text-black leading-none my-1">#42</p>
+      <div id="receipt-summary" class="text-xs text-left bg-white rounded-2xl p-3 max-h-52 overflow-y-auto sb text-neutral-700 mt-3 shadow-sm"></div>
+    </div>
+    <div class="px-6 pb-6">
+      <button onclick="finishAndReset()" class="btn-y w-full py-3 text-2xl rounded-2xl">Terminer</button>
+      <div class="h-1 bg-neutral-300 rounded-full mt-3 overflow-hidden"><div id="auto-bar" class="h-full bg-yellow-400"></div></div>
+    </div>
+  </div>
+</div>
 
-        function toggleOrderType() {
-            orderType = orderType === 'Sur Place' ? 'À Emporter' : 'Sur Place';
-            document.getElementById('order-type-badge').textContent = orderType;
-            document.getElementById('order-type-icon').textContent = orderType === 'Sur Place' ? '🍽️' : '🛍️';
-        }
+<script>
+const FALLBACK = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80';
+const U = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=500&q=80`;
+const CATS = { stars:'Menus Meute', burgers:'Burgers', hotdogs:'Hot-Dogs', sides:'Sides', drinks:'Boissons', desserts:'Desserts' };
 
-        function filterCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.classList.remove('bg-yellow-400', 'text-black');
-                btn.classList.add('bg-neutral-800', 'text-neutral-300');
-            });
-            const active = document.getElementById(`cat-${cat}`);
-            if (active) {
-                active.classList.remove('bg-neutral-800', 'text-neutral-300');
-                active.classList.add('bg-yellow-400', 'text-black');
-            }
-            renderProducts();
-        }
+const SIZES = [{l:'Normal',x:0},{l:'Maxi',x:1}];
+const SIDES = [{l:'Frites Croquantes',x:0},{l:'Frites Cheddar',x:1.5},{l:'Nuggets x6',x:2}];
+const DRINKS = ['Coca-Cola 33cl','Ice Tea Pêche 33cl','Oasis Tropical 33cl','Eau Minérale 50cl'].map(l=>({l,x:0}));
+const mk = a => [{t:'Taille du menu',o:SIZES},{t:'Votre plat',o:a.map(l=>({l,x:0}))},{t:'Votre accompagnement',o:SIDES},{t:'Votre boisson',o:DRINKS}];
 
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            const items = currentCategory === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === currentCategory);
+const PRODUCTS = [
+ { id:'menu-unchained', name:'Menu Unchained', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&', desc:'Burger, frites, boisson + jouet Requin Brainrot', groups:mk(['Burger Unchained Smash','Crispy Chicken Brainrot']) },
+ { id:'menu-max', name:'Le Menu Max', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&', desc:'Burger Kraft, frites, boisson + figurine Minecraft', groups:mk(['Burger Max Craft','Chicken Max Crispy']) },
+ { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada022a&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
+ { id:'toutou-burger', name:'Le Bon Toutou', category:'burgers', price:11.90, img:U('photo-1568901346375-23c9450c58cd'), desc:'Pur bœuf, cheddar fondu, sauce maison' },
+ { id:'big-bark', name:'Big Bark', category:'burgers', price:12.90, img:U('photo-1586190848861-99aa4a171e90'), desc:'Double steak, oignons crispy, BBQ fumée' },
+ { id:'crispy-puppy', name:'Crispy Puppy', category:'burgers', price:10.90, img:U('photo-1625813506062-0aeb1d7a094b'), desc:'Poulet croustillant, salade, mayo moutarde' },
+ { id:'hd-classic', name:'Hot-Dog Classic', category:'hotdogs', price:7.90, img:U('photo-1619740455993-9e612b1af08a'), desc:'Saucisse de volaille, moutarde, oignons frits' },
+ { id:'hd-cheddar', name:'Hot-Dog Cheddar Melt', category:'hotdogs', price:8.90, img:U('photo-1627308595229-7830a5c91f9f'), desc:'Cheddar chaud et bacon croustillant' },
+ { id:'frites-croquantes', name:'Frites Croquantes', category:'sides', price:3.00, img:U('photo-1573080496219-bb080dd4f877'), desc:'Frites maison coupées épaisses' },
+ { id:'frites-cheddar', name:'Frites Cheese Cheddar', category:'sides', price:4.50, img:U('photo-1585109649139-366815a0d713'), desc:'Sauce fromage cheddar chaud' },
+ { id:'nuggets-6', name:'6 Nuggets Poulet', category:'sides', price:5.90, img:U('photo-1562967914-608f82629710'), desc:'Bouchées de poulet croustillantes' },
+ { id:'coca-cola', name:'Coca-Cola 33cl', category:'drinks', price:2.50, img:U('photo-1622483767028-3f66f32aef97'), desc:'Rafraîchissant' },
+ { id:'ice-tea', name:'Ice Tea 33cl', category:'drinks', price:2.50, img:U('photo-1556881286-fc6915169721'), desc:'Saveur pêche' },
+ { id:'donut-yellow', name:'Donut Yellow Glaze', category:'desserts', price:3.20, img:U('photo-1527515637462-cff94eecc1ac'), desc:'Nappage citron & vanille' },
+ { id:'cookie-choco', name:'Cookie Toutou Choco', category:'desserts', price:3.00, img:U('photo-1499636136210-6f4ee915583e'), desc:'Grand cookie aux pépites' }
+];
+const UPSELL = ['cookie-choco','donut-yellow','coca-cola','frites-croquantes'];
 
-            grid.innerHTML = items.map(p => `
-                <div class="toutou-card rounded-xl p-2.5 flex flex-col justify-between overflow-hidden relative">
-                    ${p.category === 'stars' ? '<span class="absolute top-2 right-2 bg-yellow-400 text-black text-[9px] font-bold px-1.5 py-0.5 rounded shadow">STAR</span>' : ''}
-                    <img src="${p.img}" alt="${p.name}" class="w-full h-24 object-cover rounded-lg mb-2" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80'">
-                    <div>
-                        <h4 class="font-bebas text-lg text-white leading-tight">${p.name}</h4>
-                        <p class="text-[10px] text-neutral-400 line-clamp-2 leading-snug">${p.desc}</p>
-                    </div>
-                    <div class="mt-2.5 flex items-center justify-between border-t border-neutral-800 pt-2">
-                        <span class="font-bebas text-lg text-yellow-400">${p.price.toFixed(2)} €</span>
-                        <button onclick="handleProductClick('${p.id}')" class="toutou-btn-yellow px-2.5 py-1 text-sm rounded-lg">
-                            +
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
+let cart = [], orderType = 'Sur Place', currentStar = null, picks = [], inactivityTimer = null, autoTimer = null;
+const $ = id => document.getElementById(id);
+const eur = n => n.toFixed(2).replace('.', ',') + ' €';
+const total = () => cart.reduce((a, i) => a + i.price * i.qty, 0);
 
-        function handleProductClick(id) {
-            const product = PRODUCTS.find(p => p.id === id);
-            if (!product) return;
+function setType(t) { orderType = t; $('order-type-badge').textContent = t; $('order-type-icon').textContent = t === 'Sur Place' ? '🍽️' : '🛍️'; }
+function startOrder(type = 'Sur Place') { setType(type); $('splash-screen').classList.add('hidden'); resetInactivityTimer(); }
+function toggleOrderType() { setType(orderType === 'Sur Place' ? 'À Emporter' : 'Sur Place'); }
 
-            if (product.isStar) {
-                currentStarProduct = product;
-                document.getElementById('modal-star-title').textContent = product.name;
-                document.getElementById('star-price-display').textContent = product.price.toFixed(2) + ' €';
+function filterCategory(cat) {
+  document.querySelectorAll('.cat').forEach(b => b.classList.remove('on'));
+  $('cat-' + cat).classList.add('on');
+  $('cat-' + cat).scrollIntoView({ inline:'center', block:'nearest' });
+  $('cat-title').textContent = CATS[cat];
+  $('main').scrollTop = 0;
+  $('products-grid').innerHTML = PRODUCTS.filter(p => p.category === cat).map(p => `
+    <button onclick="handleProductClick('${p.id}')" class="prod">
+      <div class="relative">
+        <img src="${p.img}" alt="${p.name}" onerror="this.onerror=null;this.src='${FALLBACK}'">
+        ${p.isStar ? '<span class="badge">⭐ MENU</span>' : ''}
+      </div>
+      <div class="bd">
+        <h4 class="font-bebas text-xl leading-none">${p.name}</h4>
+        <p class="text-[10px] text-neutral-500 leading-snug line-clamp-2">${p.desc}</p>
+        <div class="flex items-center justify-between mt-auto pt-2">
+          <span class="font-bebas text-2xl leading-none">${p.isStar ? 'dès ' : ''}${eur(p.price)}</span>
+          <span class="add">+</span>
+        </div>
+      </div>
+    </button>`).join('');
+}
 
-                const selectPlat = document.getElementById('star-plat-select');
-                selectPlat.innerHTML = product.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg; t.classList.remove('hidden', 'toast'); void t.offsetWidth; t.classList.add('toast');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.add('hidden'), 1600);
+}
 
-                document.getElementById('star-modal').classList.remove('hidden');
-            } else {
-                addToCart(product);
-            }
-        }
+function handleProductClick(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  if (!p.isStar) return addToCart(p);
+  currentStar = p;
+  picks = p.groups.map(() => 0);
+  $('star-img').src = p.img;
+  $('modal-star-title').textContent = p.name;
+  $('modal-star-sub').textContent = p.desc;
+  renderStarOptions();
+  $('star-modal').classList.remove('hidden');
+}
+function starTotal() { return currentStar.price + currentStar.groups.reduce((s, g, i) => s + g.o[picks[i]].x, 0); }
+function renderStarOptions() {
+  $('star-options').innerHTML = currentStar.groups.map((g, gi) => `
+    <div>
+      <div class="font-bebas text-xl leading-none mb-2">${g.t}</div>
+      <div class="flex flex-wrap gap-2">
+        ${g.o.map((o, oi) => `<button onclick="pick(${gi},${oi})" class="chip ${picks[gi] === oi ? 'on' : ''}">${o.l}${o.x ? ' (+' + eur(o.x) + ')' : ''}</button>`).join('')}
+      </div>
+    </div>`).join('');
+  $('star-price-display').textContent = eur(starTotal());
+}
+function pick(g, o) { picks[g] = o; renderStarOptions(); }
+function closeStarModal() { $('star-modal').classList.add('hidden'); }
+function confirmStarMenu() {
+  if (!currentStar) return;
+  const detail = currentStar.groups.map((g, i) => g.o[picks[i]].l).join(' • ');
+  addToCart({ ...currentStar, price: starTotal() }, detail);
+  closeStarModal();
+}
 
-        function closeStarModal() {
-            document.getElementById('star-modal').classList.add('hidden');
-        }
+function addToCart(p, detail = '') {
+  const ex = cart.find(i => i.id === p.id && i.detail === detail);
+  if (ex) ex.qty++; else cart.push({ id: p.id, name: p.name, price: p.price, detail, qty: 1 });
+  updateCartUI();
+  toast('✓ ' + p.name + ' ajouté');
+}
+function updateCartUI() {
+  const q = cart.reduce((a, i) => a + i.qty, 0);
+  $('cart-badge').textContent = q;
+  $('cart-total-display').textContent = eur(total());
+  $('modal-total-price').textContent = eur(total());
+  $('btn-checkout').disabled = q === 0;
+}
 
-        function confirmStarMenu() {
-            if (!currentStarProduct) return;
-            const plat = document.getElementById('star-plat-select').value;
-            const side = document.getElementById('star-side-select').value;
-            const drink = document.getElementById('star-drink-select').value;
+function openCartModal() { renderCart(); $('cart-modal').classList.remove('hidden'); }
+function closeCartModal() { $('cart-modal').classList.add('hidden'); }
+function renderCart() {
+  $('cart-items-list').innerHTML = cart.map((it, i) => `
+    <div class="flex items-center justify-between bg-[#F1F1F1] p-2.5 rounded-2xl">
+      <div class="pr-2 min-w-0">
+        <div class="font-bebas text-xl leading-tight">${it.name}</div>
+        ${it.detail ? `<div class="text-[10px] text-neutral-500 leading-snug">${it.detail}</div>` : ''}
+        <div class="text-xs font-black mt-0.5">${eur(it.price * it.qty)}</div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="changeQty(${i},-1)" class="w-8 h-8 bg-white rounded-full font-black shadow">−</button>
+        <span class="text-sm font-black w-4 text-center">${it.qty}</span>
+        <button onclick="changeQty(${i},1)" class="w-8 h-8 bg-yellow-400 rounded-full font-black shadow">+</button>
+      </div>
+    </div>`).join('');
+  $('upsell').innerHTML = UPSELL.map(id => {
+    const p = PRODUCTS.find(x => x.id === id);
+    return `<button onclick="addUpsell('${id}')" class="shrink-0 w-24 bg-[#F1F1F1] rounded-2xl p-1.5 text-left">
+      <img src="${p.img}" class="w-full h-14 object-cover rounded-xl" alt="" onerror="this.onerror=null;this.src='${FALLBACK}'">
+      <div class="text-[10px] font-black leading-tight mt-1 truncate">${p.name}</div>
+      <div class="text-[11px] font-black text-neutral-600">+ ${eur(p.price)}</div></button>`;
+  }).join('');
+  updateCartUI();
+}
+function addUpsell(id) { addToCart(PRODUCTS.find(x => x.id === id)); renderCart(); }
+function changeQty(i, d) {
+  cart[i].qty += d;
+  if (cart[i].qty <= 0) cart.splice(i, 1);
+  if (!cart.length) { updateCartUI(); return closeCartModal(); }
+  renderCart();
+}
 
-            const customName = `${currentStarProduct.name} (${plat}, ${side}, ${drink})`;
-            addToCart({ ...currentStarProduct, name: customName });
-            closeStarModal();
-        }
+function submitOrder() {
+  closeCartModal();
+  $('order-number').textContent = '#' + Math.floor(10 + Math.random() * 90);
+  $('order-where').textContent = orderType === 'Sur Place' ? 'Prenez votre chevalet et installez-vous' : 'Rendez-vous au comptoir pour récupérer votre commande';
+  $('receipt-summary').innerHTML =
+    `<div class="font-black mb-1">${orderType.toUpperCase()}</div>` +
+    cart.map(i => `<div class="flex justify-between gap-2 py-0.5"><span>${i.qty}x ${i.name}</span><span class="shrink-0 font-bold">${eur(i.price * i.qty)}</span></div>`).join('') +
+    `<div class="border-t border-neutral-200 mt-2 pt-1.5 flex justify-between font-black text-base"><span>TOTAL</span><span>${eur(total())}</span></div>`;
+  $('confirmation-screen').classList.remove('hidden');
+  const bar = $('auto-bar');
+  bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = 'bar 20s linear forwards';
+  clearTimeout(autoTimer); autoTimer = setTimeout(finishAndReset, 20000);
+}
+function resetOrder() { cart = []; updateCartUI(); }
+function finishAndReset() {
+  clearTimeout(autoTimer);
+  resetOrder();
+  $('confirmation-screen').classList.add('hidden');
+  $('splash-screen').classList.remove('hidden');
+  filterCategory('stars');
+}
 
-        function addToCart(product) {
-            const existing = cart.find(item => item.name === product.name);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ ...product, qty: 1 });
-            }
-            updateCartUI();
-        }
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => $('attract-screen').classList.remove('hidden'), 30000);
+}
+function dismissAttractMode() { $('attract-screen').classList.add('hidden'); resetInactivityTimer(); }
 
-        function updateCartUI() {
-            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
-            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-
-            document.getElementById('cart-badge').textContent = totalQty;
-            document.getElementById('cart-total-display').textContent = totalPrice.toFixed(2) + ' €';
-            document.getElementById('modal-total-price').textContent = totalPrice.toFixed(2) + ' €';
-            document.getElementById('btn-checkout').disabled = totalQty === 0;
-        }
-
-        function openCartModal() {
-            renderCartModalItems();
-            document.getElementById('cart-modal').classList.remove('hidden');
-        }
-
-        function closeCartModal() {
-            document.getElementById('cart-modal').classList.add('hidden');
-        }
-
-        function renderCartModalItems() {
-            const container = document.getElementById('cart-items-list');
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-center text-xs text-neutral-500 py-4">Votre panier est vide</p>';
-                return;
-            }
-            container.innerHTML = cart.map((item, idx) => `
-                <div class="flex items-center justify-between bg-neutral-900 p-2 rounded-lg border border-neutral-800">
-                    <div class="pr-2">
-                        <div class="font-bebas text-base text-white leading-tight">${item.name}</div>
-                        <div class="text-xs text-yellow-400 font-bold">${(item.price * item.qty).toFixed(2)} €</div>
-                    </div>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <button onclick="changeQty(${idx}, -1)" class="w-6 h-6 bg-neutral-800 text-white rounded text-xs font-bold">-</button>
-                        <span class="text-xs font-bold text-white px-1">${item.qty}</span>
-                        <button onclick="changeQty(${idx}, 1)" class="w-6 h-6 bg-yellow-400 text-black rounded text-xs font-bold">+</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function changeQty(index, delta) {
-            cart[index].qty += delta;
-            if (cart[index].qty <= 0) cart.splice(index, 1);
-            updateCartUI();
-            renderCartModalItems();
-        }
-
-        function submitOrder() {
-            closeCartModal();
-            const orderNum = '#' + Math.floor(10 + Math.random() * 90);
-            document.getElementById('order-number').textContent = orderNum;
-
-            const summary = document.getElementById('receipt-summary');
-            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-
-            summary.innerHTML = cart.map(item => `
-                <div class="flex justify-between py-0.5">
-                    <span>${item.qty}x ${item.name}</span>
-                    <span>${(item.price * item.qty).toFixed(2)} €</span>
-                </div>
-            `).join('') + `
-                <div class="border-t border-neutral-700 mt-2 pt-1 flex justify-between font-bold text-yellow-400">
-                    <span>TOTAL</span>
-                    <span>${totalPrice.toFixed(2)} €</span>
-                </div>
-            `;
-
-            document.getElementById('confirmation-screen').classList.remove('hidden');
-        }
-
-        function resetOrder() {
-            cart = [];
-            updateCartUI();
-        }
-
-        function finishAndReset() {
-            resetOrder();
-            document.getElementById('confirmation-screen').classList.add('hidden');
-            document.getElementById('splash-screen').classList.remove('hidden');
-        }
-
-        /* Gestion du Screen Saver / Inactivité (30 secondes) */
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                document.getElementById('attract-screen').classList.remove('hidden');
-            }, 30000);
-        }
-
-        function dismissAttractMode() {
-            document.getElementById('attract-screen').classList.add('hidden');
-            resetInactivityTimer();
-        }
-
-        window.onload = function() {
-            renderProducts();
-            updateCartUI();
-            resetInactivityTimer();
-        };
-    </script>
+window.onload = () => { filterCategory('stars'); updateCartUI(); resetInactivityTimer(); };
+</script>
 </body>
 </html>
