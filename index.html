@@ -49,6 +49,28 @@
             transform: scale(0.97);
         }
 
+        /* BARRE DE DÉFILEMENT PERSONNALISÉE (SCROLLBAR JAUNE/NOIR) */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #121212;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 8px;
+            border: 2px solid #121212;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #FFE44D;
+        }
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #FFD700 #121212;
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -71,8 +93,7 @@
         <!-- ==================== SCREENSAVER / ÉCONOMISEUR D'ÉCRAN (30s) ==================== -->
         <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-50 bg-black cursor-pointer overflow-hidden">
             <div class="absolute inset-0">
-                <div class="screensaver-bg absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&'), url('8403edbe-bcc0-4267-b867-5926bd799e62.png');">
-                    <!-- Filte dégradé pour la lisibilité -->
+                <div class="screensaver-bg absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6" style="background-image: url('https://wamonixx.fr/borne_de_commande_le_raz.html/image_2581da.jpg'), url('image_2581da.jpg');">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
 
                     <div class="relative z-10 flex justify-between items-center">
@@ -87,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Call to action permanent -->
             <div class="absolute bottom-6 left-6 right-6 z-20">
                 <div class="toutou-btn-yellow py-4 text-center text-2xl font-bebas rounded-2xl animate-pulse tracking-wider shadow-2xl">
                     TOUCHER L'ÉCRAN POUR COMMANDER
@@ -138,7 +158,7 @@
         </header>
 
         <!-- ==================== BARRE DES CATÉGORIES ==================== -->
-        <nav class="flex border-b border-neutral-800 bg-black shrink-0 overflow-x-auto no-scrollbar p-1.5 gap-1.5">
+        <nav class="flex border-b border-neutral-800 bg-black shrink-0 overflow-x-auto custom-scrollbar p-1.5 gap-1.5">
             <button onclick="filterCategory('all')" id="cat-all" class="cat-btn px-3 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold shrink-0">Tous</button>
             <button onclick="filterCategory('stars')" id="cat-stars" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">⭐ Menus Meute</button>
             <button onclick="filterCategory('burgers')" id="cat-burgers" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍔 Burgers</button>
@@ -148,8 +168,8 @@
             <button onclick="filterCategory('desserts')" id="cat-desserts" class="cat-btn px-3 py-1.5 bg-neutral-800 text-neutral-300 rounded-lg text-xs font-bold shrink-0">🍰 Desserts</button>
         </nav>
 
-        <!-- ==================== GRILLE DE PRODUITS ==================== -->
-        <main class="flex-1 p-2.5 overflow-y-auto no-scrollbar bg-[#0D0D0D]">
+        <!-- ==================== GRILLE DE PRODUITS (AVEC SCROLLBAR SUR LE CÔTÉ) ==================== -->
+        <main class="flex-1 p-2.5 pr-1 overflow-y-auto custom-scrollbar bg-[#0D0D0D]">
             <div id="products-grid" class="grid grid-cols-2 gap-2.5">
                 <!-- Injection via JS -->
             </div>
@@ -187,7 +207,7 @@
                     <button onclick="closeStarModal()" class="text-neutral-400 font-bold px-2 py-1 text-lg">✕</button>
                 </div>
 
-                <div class="overflow-y-auto space-y-3 my-3 no-scrollbar pr-1">
+                <div class="overflow-y-auto space-y-3 my-3 custom-scrollbar pr-1">
                     <div>
                         <label class="text-xs font-bold text-neutral-400 uppercase">1. Choix du Plat</label>
                         <select id="star-plat-select" class="w-full mt-1 bg-neutral-900 border border-neutral-700 text-white text-xs rounded-lg p-2">
@@ -227,7 +247,7 @@
                     <button onclick="closeCartModal()" class="text-neutral-400 font-bold px-2 text-lg">✕</button>
                 </div>
 
-                <div id="cart-items-list" class="flex-1 overflow-y-auto space-y-2 my-3 no-scrollbar"></div>
+                <div id="cart-items-list" class="flex-1 overflow-y-auto space-y-2 my-3 custom-scrollbar pr-1"></div>
 
                 <div class="border-t border-neutral-800 pt-2 flex justify-between items-center mb-3">
                     <span class="text-xs text-neutral-400 font-bold">TOTAL À PAYER:</span>
@@ -258,7 +278,7 @@
                     <p id="order-number" class="text-6xl font-bebas text-yellow-400 my-1">#42</p>
                 </div>
 
-                <div id="receipt-summary" class="text-xs text-left bg-neutral-900 border border-neutral-800 p-3 rounded-xl max-h-36 overflow-y-auto font-mono text-neutral-300"></div>
+                <div id="receipt-summary" class="text-xs text-left bg-neutral-900 border border-neutral-800 p-3 rounded-xl max-h-36 overflow-y-auto custom-scrollbar font-mono text-neutral-300"></div>
             </div>
 
             <button onclick="finishAndReset()" class="w-full toutou-btn-yellow py-3 text-xl font-bebas text-black rounded-xl">
@@ -272,7 +292,7 @@
     <script>
         const PRODUCTS = [
             // Menus Stars / Meute
-            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
+            { id: 'menu-max', name: 'Le Menu Max', category: 'stars', price: 16.90, img: 'https://wamonixx.fr/borne_de_commande_le_raz.html/image_2581da.jpg', desc: 'Burger Kraft + Frites + Boisson + Figurine Bon Toutou Minecraft !', isStar: true, options: ['Burger Max Craft', 'Chicken Max Crispy'] },
             { id: 'menu-toutou-supreme', name: 'Menu Toutou Supreme', category: 'stars', price: 15.90, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', desc: 'Double Smash + Frites + Boisson + Jouet Nossy Balle !', isStar: true, options: ['Toutou Double Smash', 'Toutou Crispy Chicken'] },
             { id: 'menu-alpha-dog', name: 'Menu Alpha Dog', category: 'stars', price: 14.90, img: 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80', desc: 'Giant Hot-Dog + Frites Cheddar + Boisson 33cl', isStar: true, options: ['Hot-Dog Classic Cheese', 'Hot-Dog Crispy Bacon'] },
 
