@@ -16,7 +16,7 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
 
 .btn-y { background:linear-gradient(180deg,#FFD700,#E6BF00); color:#000; font-family:'Bebas Neue',sans-serif; letter-spacing:1px; text-transform:uppercase; box-shadow:0 3px 0 var(--y2); transition:transform .1s, box-shadow .1s; }
 .btn-y:active { transform:translateY(3px); box-shadow:none; }
-.btn-y:disabled { background:#d9d9d9; color:#999; box-shadow:none; }
+.btn-y:disabled { background:#d9d9d9; color:#999; box-shadow:none; cursor:not-allowed; }
 .btn-k { background:var(--k); color:var(--y); font-family:'Bebas Neue',sans-serif; letter-spacing:1px; }
 
 /* Catégories (barre horizontale à grosses tuiles) */
@@ -178,7 +178,7 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
         <span class="text-xs text-neutral-500 font-black">TOTAL</span>
         <span id="modal-total-price" class="font-bebas text-4xl leading-none">0,00 €</span>
       </div>
-      <button onclick="submitOrder()" class="btn-y w-full py-3 text-2xl rounded-2xl mt-3">Confirmer et payer</button>
+      <button id="btn-modal-pay" onclick="submitOrder()" class="btn-y w-full py-3 text-2xl rounded-2xl mt-3">Confirmer et payer</button>
     </div>
   </div>
 
@@ -214,7 +214,7 @@ const mk = a => [{t:'Taille du menu',o:SIZES},{t:'Votre plat',o:a.map(l=>({l,x:0
 const PRODUCTS = [
  { id:'menu-unchained', name:'Menu Unchained', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562441042492526672/fe9918bd-7d9e-47d5-87e4-975cef3d97bf.png?ex=6ada001d&is=6ad8ae9d&hm=4801bf177dddd20cf5b107262e7717737347c063cc030a0958ee51be9fe56a7d&', desc:'Burger, frites, boisson + jouet Requin Brainrot', groups:mk(['Burger Unchained Smash','Crispy Chicken Brainrot']) },
  { id:'menu-max', name:'Le Menu Max', category:'stars', price:16.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562174926348361828/8403edbe-bcc0-4267-b867-5926bd799e62.png?ex=6ad9b106&is=6ad85f86&hm=9d1d0feddcd8be35ff6a067a556192205a79d8245bc03276c2a24858dff073a2&', desc:'Burger Kraft, frites, boisson + figurine Minecraft', groups:mk(['Burger Max Craft','Chicken Max Crispy']) },
- { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada022a&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
+ { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'https://cdn.discordapp.com/attachments/1094196659971424266/1562443244686680208/46e6f042-ab1b-43ad-b41b-73cbdf7dcca5.png?ex=6ada02b4&is=6ad8b0aa&hm=dfd7e169db1efafea568ffe34743430f828b4a3b59b0274d292c491139bdb923&', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
  { id:'toutou-burger', name:'Le Bon Toutou', category:'burgers', price:11.90, img:U('photo-1568901346375-23c9450c58cd'), desc:'Pur bœuf, cheddar fondu, sauce maison' },
  { id:'big-bark', name:'Big Bark', category:'burgers', price:12.90, img:U('photo-1586190848861-99aa4a171e90'), desc:'Double steak, oignons crispy, BBQ fumée' },
  { id:'crispy-puppy', name:'Crispy Puppy', category:'burgers', price:10.90, img:U('photo-1625813506062-0aeb1d7a094b'), desc:'Poulet croustillant, salade, mayo moutarde' },
@@ -229,7 +229,7 @@ const PRODUCTS = [
  { id:'donut-yellow', name:'Donut Yellow Glaze', category:'desserts', price:3.20, img:U('photo-1527515637462-cff94eecc1ac'), desc:'Nappage citron & vanille' },
  { id:'cookie-choco', name:'Cookie Toutou Choco', category:'desserts', price:3.00, img:U('photo-1499636136210-6f4ee915583e'), desc:'Grand cookie aux pépites' }
 ];
-const UPSELL = ['cookie-choco','donut-yellow','coca-cola','frites-croquantes'];
+const UPSELL = ['cookie-choco','donut-yellow','gros-caca','frites-croquantes'];
 
 let cart = [], orderType = 'Sur Place', currentStar = null, picks = [], inactivityTimer = null, autoTimer = null;
 const $ = id => document.getElementById(id);
@@ -242,10 +242,8 @@ function toggleOrderType() { setType(orderType === 'Sur Place' ? 'À Emporter' :
 
 function filterCategory(cat) {
   document.querySelectorAll('.cat').forEach(b => b.classList.remove('on'));
-  $('cat-' + cat).classList.add('on');
-  $('cat-' + cat).scrollIntoView({ inline:'center', block:'nearest' });
-  $('cat-title').textContent = CATS[cat];
-  $('main').scrollTop = 0;
+  $('cat-' + cat).classList.add('on');$('cat-' + cat).scrollIntoView({ inline:'center', block:'nearest' });
+  $('cat-title').textContent = CATS[cat];$('main').scrollTop = 0;
   $('products-grid').innerHTML = PRODUCTS.filter(p => p.category === cat).map(p => `
     <button onclick="handleProductClick('${p.id}')" class="prod">
       <div class="relative">
@@ -307,16 +305,22 @@ function addToCart(p, detail = '') {
   updateCartUI();
   toast('✓ ' + p.name + ' ajouté');
 }
+
 function updateCartUI() {
   const q = cart.reduce((a, i) => a + i.qty, 0);
   $('cart-badge').textContent = q;
   $('cart-total-display').textContent = eur(total());
-  $('modal-total-price').textContent = eur(total());
-  $('btn-checkout').disabled = q === 0;
+  $('modal-total-price').textContent = eur(total());$('btn-checkout').disabled = q === 0;
+  if ($('btn-modal-pay'))$('btn-modal-pay').disabled = q === 0;
 }
 
-function openCartModal() { renderCart(); $('cart-modal').classList.remove('hidden'); }
+function openCartModal() {
+  if (!cart.length) return;
+  renderCart();
+  $('cart-modal').classList.remove('hidden');
+}
 function closeCartModal() { $('cart-modal').classList.add('hidden'); }
+
 function renderCart() {
   $('cart-items-list').innerHTML = cart.map((it, i) => `
     <div class="flex items-center justify-between bg-[#F1F1F1] p-2.5 rounded-2xl">
@@ -333,6 +337,7 @@ function renderCart() {
     </div>`).join('');
   $('upsell').innerHTML = UPSELL.map(id => {
     const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return '';
     return `<button onclick="addUpsell('${id}')" class="shrink-0 w-24 bg-[#F1F1F1] rounded-2xl p-1.5 text-left">
       <img src="${p.img}" class="w-full h-14 object-cover rounded-xl" alt="" onerror="this.onerror=null;this.src='${FALLBACK}'">
       <div class="text-[10px] font-black leading-tight mt-1 truncate">${p.name}</div>
@@ -340,33 +345,42 @@ function renderCart() {
   }).join('');
   updateCartUI();
 }
-function addUpsell(id) { addToCart(PRODUCTS.find(x => x.id === id)); renderCart(); }
+
+function addUpsell(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (p) { addToCart(p); renderCart(); }
+}
+
 function changeQty(i, d) {
   cart[i].qty += d;
   if (cart[i].qty <= 0) cart.splice(i, 1);
-  if (!cart.length) { updateCartUI(); return closeCartModal(); }
-  renderCart();
+  updateCartUI();
+  if (!cart.length) { closeCartModal(); } else { renderCart(); }
 }
 
 function submitOrder() {
+  if (!cart.length) return;
+  const currentTotal = total();
+  const summaryHTML = `<div class="font-black mb-1">${orderType.toUpperCase()}</div>` +
+    cart.map(i => `<div class="flex justify-between gap-2 py-0.5"><span>${i.qty}x ${i.name}</span><span class="shrink-0 font-bold">${eur(i.price * i.qty)}</span></div>`).join('') +
+    `<div class="border-t border-neutral-200 mt-2 pt-1.5 flex justify-between font-black text-base"><span>TOTAL</span><span>${eur(currentTotal)}</span></div>`;
+  
   closeCartModal();
   $('order-number').textContent = '#' + Math.floor(10 + Math.random() * 90);
   $('order-where').textContent = orderType === 'Sur Place' ? 'Prenez votre chevalet et installez-vous' : 'Rendez-vous au comptoir pour récupérer votre commande';
-  $('receipt-summary').innerHTML =
-    `<div class="font-black mb-1">${orderType.toUpperCase()}</div>` +
-    cart.map(i => `<div class="flex justify-between gap-2 py-0.5"><span>${i.qty}x ${i.name}</span><span class="shrink-0 font-bold">${eur(i.price * i.qty)}</span></div>`).join('') +
-    `<div class="border-t border-neutral-200 mt-2 pt-1.5 flex justify-between font-black text-base"><span>TOTAL</span><span>${eur(total())}</span></div>`;
+  $('receipt-summary').innerHTML = summaryHTML;
   $('confirmation-screen').classList.remove('hidden');
+  
   const bar = $('auto-bar');
   bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = 'bar 20s linear forwards';
   clearTimeout(autoTimer); autoTimer = setTimeout(finishAndReset, 20000);
 }
+
 function resetOrder() { cart = []; updateCartUI(); }
 function finishAndReset() {
   clearTimeout(autoTimer);
   resetOrder();
-  $('confirmation-screen').classList.add('hidden');
-  $('splash-screen').classList.remove('hidden');
+  $('confirmation-screen').classList.add('hidden');$('splash-screen').classList.remove('hidden');
   filterCategory('stars');
 }
 
