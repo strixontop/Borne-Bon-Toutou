@@ -60,17 +60,17 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
 
   <!-- SCREENSAVER -->
   <div id="attract-screen" onclick="dismissAttractMode()" class="hidden absolute inset-0 z-[60] bg-black cursor-pointer overflow-hidden">
-    <div class="ss ss1 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menuucAOD">
+    <div class="ss ss1 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menuucAOD.png">
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
       <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">NOUVEAUTÉ EXCLUSIVE</span></div>
       <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">MENU UNCHAINED</h2><p class="text-white font-graffiti text-sm mt-1">AVEC LE JOUET REQUIN BRAINROT !</p></div>
     </div>
-    <div class="ss ss2 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menumaxAOD">
+    <div class="ss ss2 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menumaxAOD.png">
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
       <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">COLLAB EXCLUSIVE</span></div>
       <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">LE MENU MAX</h2><p class="text-white font-graffiti text-sm mt-1">AVEC LE JOUET FIGURINE BON TOUTOU !</p></div>
     </div>
-    <div class="ss ss3 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menustrixAOD">
+    <div class="ss ss3 absolute inset-0 bg-cover bg-center bg-neutral-900 flex flex-col justify-between p-6" data-bg="images/menustrixAOD.png">
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60"></div>
       <div class="relative z-10"><span class="px-3 py-1 bg-yellow-400 text-black font-graffiti text-xs rounded-lg">EDITION CHAOS</span></div>
       <div class="relative z-10 text-center mb-24"><h2 class="text-6xl font-bebas text-yellow-400 leading-none">MENU STRIX</h2><p class="text-white font-graffiti text-sm mt-1">SENSATIONS EXTRÊMES !</p></div>
@@ -204,39 +204,6 @@ body { font-family:'Montserrat',sans-serif; background:#050505; color:var(--ink)
 <script>
 const FALLBACK = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80';
 
-/* ===== Chargement robuste des images locales (avec ou sans extension) ===== */
-const EXTS = ['png','jpg','jpeg','webp','avif','gif','PNG','JPG','JPEG'];
-const isLocal = s => !/^(https?:|data:)/.test(s);
-const candidates = src => {
-  const base = src.replace(/\.\w{3,4}$/, '');
-  return [...new Set([src, ...EXTS.map(e => `${base}.${e}`)])];
-};
-function tryNext(img) {
-  const c = candidates(img.dataset.base), i = +img.dataset.i || 0;
-  if (i < c.length) { img.dataset.i = i + 1; img.src = c[i]; }
-  else { img.onerror = null; console.warn('Image introuvable :', img.dataset.base); img.src = FALLBACK; }
-}
-function imgHTML(src, cls = '', alt = '') {
-  if (!isLocal(src)) return `<img src="${src}" class="${cls}" alt="${alt}" onerror="this.onerror=null;this.src='${FALLBACK}'">`;
-  return `<img src="${src}" data-base="${src}" data-i="1" class="${cls}" alt="${alt}" onerror="tryNext(this)">`;
-}
-function setImg(el, src) {
-  if (!isLocal(src)) { el.onerror = () => { el.onerror = null; el.src = FALLBACK; }; el.src = src; return; }
-  el.dataset.base = src; el.dataset.i = 1;
-  el.onerror = () => tryNext(el);
-  el.src = src;
-}
-function loadBg(el) {
-  const c = candidates(el.dataset.bg); let i = 0;
-  const t = new Image();
-  t.onload = () => { el.style.backgroundImage = `url('${t.src}')`; };
-  t.onerror = () => {
-    if (++i < c.length) t.src = c[i];
-    else { console.warn('Image introuvable :', el.dataset.bg); el.style.backgroundImage = `url('${FALLBACK}')`; }
-  };
-  t.src = c[0];
-}
-
 const U = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=500&q=80`;
 const CATS = { stars:'Menus Meute', burgers:'Burgers', hotdogs:'Hot-Dogs', sides:'Sides', drinks:'Boissons', desserts:'Desserts' };
 
@@ -246,9 +213,9 @@ const DRINKS = ['Gros Caca 33cl','Samba 33cl','Max Energy 33cl','Seinoise (eau d
 const mk = a => [{t:'Taille du menu',o:SIZES},{t:'Votre plat',o:a.map(l=>({l,x:0}))},{t:'Votre accompagnement',o:SIDES},{t:'Votre boisson',o:DRINKS}];
 
 const PRODUCTS = [
- { id:'menu-unchained', name:'Menu Unchained', category:'stars', price:16.90, isStar:true, img:'images/menuuc', desc:'Burger, frites, boisson + jouet Requin Brainrot', groups:mk(['Burger Unchained Smash','Crispy Chicken Brainrot']) },
- { id:'menu-max', name:'Le Menu Max', category:'stars', price:16.90, isStar:true, img:'images/menumax', desc:'Burger Kraft, frites, boisson + figurine Minecraft', groups:mk(['Burger Max Craft','Chicken Max Crispy']) },
- { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'images/menustrix', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
+ { id:'menu-unchained', name:'Menu Unchained', category:'stars', price:16.90, isStar:true, img:'images/menuuc.png', desc:'Burger, frites, boisson + jouet Requin Brainrot', groups:mk(['Burger Unchained Smash','Crispy Chicken Brainrot']) },
+ { id:'menu-max', name:'Le Menu Max', category:'stars', price:16.90, isStar:true, img:'images/menumax.png', desc:'Burger Kraft, frites, boisson + figurine Minecraft', groups:mk(['Burger Max Craft','Chicken Max Crispy']) },
+ { id:'menu-strix', name:'Menu Strix', category:'stars', price:15.90, isStar:true, img:'images/menustrix.png', desc:'Double Smash, frites, boisson + jouet Nossy Balle', groups:mk(['Toutou Double Smash','Toutou Crispy Chicken']) },
  { id:'toutou-burger', name:'Le Bon Toutou', category:'burgers', price:11.90, img:U('photo-1568901346375-23c9450c58cd'), desc:'Pur bœuf, cheddar fondu, sauce maison' },
  { id:'big-bark', name:'Big Bark', category:'burgers', price:12.90, img:U('photo-1586190848861-99aa4a171e90'), desc:'Double steak, oignons crispy, BBQ fumée' },
  { id:'crispy-puppy', name:'Crispy Puppy', category:'burgers', price:10.90, img:U('photo-1625813506062-0aeb1d7a094b'), desc:'Poulet croustillant, salade, mayo moutarde' },
@@ -257,9 +224,9 @@ const PRODUCTS = [
  { id:'frites-croquantes', name:'Frites Croquantes', category:'sides', price:3.00, img:U('photo-1573080496219-bb080dd4f877'), desc:'Frites maison coupées épaisses' },
  { id:'frites-cheddar', name:'Frites Cheese Cheddar', category:'sides', price:4.50, img:U('photo-1585109649139-366815a0d713'), desc:'Sauce fromage cheddar chaud' },
  { id:'nuggets-6', name:'6 Nuggets Poulet', category:'sides', price:5.90, img:U('photo-1562967914-608f82629710'), desc:'Bouchées de poulet croustillantes' },
- { id:'gros-caca', name:'Gros Caca 33cl', category:'drinks', price:2.50, img:'images/groscaca', desc:'Rafraîchissant' },
- { id:'samba', name:'Samba 33cl', category:'drinks', price:2.50, img:'images/samba', desc:'Saveur pêche' },
- { id:'max-energy', name:'Max Energy 33cl', category:'drinks', price:2.50, img:'images/maxenergy', desc:'Saveur pipi de Max' },
+ { id:'gros-caca', name:'Gros Caca 33cl', category:'drinks', price:2.50, img:'images/groscaca.png', desc:'Rafraîchissant' },
+ { id:'samba', name:'Samba 33cl', category:'drinks', price:2.50, img:'images/samba.png', desc:'Saveur pêche' },
+ { id:'max-energy', name:'Max Energy 33cl', category:'drinks', price:2.50, img:'images/maxenergy.png', desc:'Saveur pipi de Max' },
  { id:'seinoise', name:'Seinoise 33cl', category:'drinks', price:2.50, img:'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FZSR0qD5Ny50%2Fhqdefault.jpg%3Fsqp%3D-oaymwEmCOADEOgC8quKqQMa8AEB-AG-AoACgAKKAgwIABABGGUgUyhCMA8%3D%26rs%3DAOn4CLAXNle_NvZm4bytnTYX2dBohXydUA&f=1&nofb=1&ipt=02c8c50be3535c3ed2318a39fef66cd7c03c7ed4fafa2b6d4d05e30a1856e132&ipo=images', desc:'Saveur pipi de Max' },
  { id:'donut-yellow', name:'Donut Yellow Glaze', category:'desserts', price:3.20, img:U('photo-1527515637462-cff94eecc1ac'), desc:'Nappage citron & vanille' },
  { id:'cookie-choco', name:'Cookie Toutou Choco', category:'desserts', price:3.00, img:U('photo-1499636136210-6f4ee915583e'), desc:'Grand cookie aux pépites' }
