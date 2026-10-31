@@ -233,7 +233,19 @@ const PRODUCTS = [
 ];
 const UPSELL = ['cookie-choco','donut-yellow','gros-caca','frites-croquantes'];
 
-  function imgHTML(src, cls = '', alt = '') {
+/* ===== Chargement robuste des images locales (avec ou sans extension) ===== */
+const EXTS = ['png','jpg','jpeg','webp','avif','gif','PNG','JPG','JPEG'];
+const isLocal = s => !/^(https?:|data:)/.test(s);
+const candidates = src => {
+  const base = src.replace(/\.\w{3,4}$/, '');
+  return [...new Set([src, ...EXTS.map(e => `${base}.${e}`)])];
+};
+function tryNext(img) {
+  const c = candidates(img.dataset.base), i = +img.dataset.i || 0;
+  if (i < c.length) { img.dataset.i = i + 1; img.src = c[i]; }
+  else { img.onerror = null; console.warn('Image introuvable :', img.dataset.base); img.src = FALLBACK; }
+}
+function imgHTML(src, cls = '', alt = '') {
   if (!isLocal(src)) return `<img src="${src}" class="${cls}" alt="${alt}" onerror="this.onerror=null;this.src='${FALLBACK}'">`;
   return `<img src="${src}" data-base="${src}" data-i="1" class="${cls}" alt="${alt}" onerror="tryNext(this)">`;
 }
@@ -253,6 +265,7 @@ function loadBg(el) {
   };
   t.src = c[0];
 }
+
   
 let cart = [], orderType = 'Sur Place', currentStar = null, picks = [], inactivityTimer = null, autoTimer = null;
 const $ = id => document.getElementById(id);
