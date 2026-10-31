@@ -233,6 +233,27 @@ const PRODUCTS = [
 ];
 const UPSELL = ['cookie-choco','donut-yellow','gros-caca','frites-croquantes'];
 
+  function imgHTML(src, cls = '', alt = '') {
+  if (!isLocal(src)) return `<img src="${src}" class="${cls}" alt="${alt}" onerror="this.onerror=null;this.src='${FALLBACK}'">`;
+  return `<img src="${src}" data-base="${src}" data-i="1" class="${cls}" alt="${alt}" onerror="tryNext(this)">`;
+}
+function setImg(el, src) {
+  if (!isLocal(src)) { el.onerror = () => { el.onerror = null; el.src = FALLBACK; }; el.src = src; return; }
+  el.dataset.base = src; el.dataset.i = 1;
+  el.onerror = () => tryNext(el);
+  el.src = src;
+}
+function loadBg(el) {
+  const c = candidates(el.dataset.bg); let i = 0;
+  const t = new Image();
+  t.onload = () => { el.style.backgroundImage = `url('${t.src}')`; };
+  t.onerror = () => {
+    if (++i < c.length) t.src = c[i];
+    else { console.warn('Image introuvable :', el.dataset.bg); el.style.backgroundImage = `url('${FALLBACK}')`; }
+  };
+  t.src = c[0];
+}
+  
 let cart = [], orderType = 'Sur Place', currentStar = null, picks = [], inactivityTimer = null, autoTimer = null;
 const $ = id => document.getElementById(id);
 const eur = n => n.toFixed(2).replace('.', ',') + ' €';
